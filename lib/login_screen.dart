@@ -9,22 +9,119 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.purple,
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-              child: Image.asset('assets/text.png'),
-            )
+              padding: EdgeInsets.fromLTRB(10, 90, 10, 10),
+              child: Image.asset(
+                'assets/text.png',
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 60, 20, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 300,
+                  ),
+                  //username
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
+                    child: Text(
+                      "Username:",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    width: 340,
+                    height: 70,
+                    child: TextField(
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(color: Colors.transparent)),
+                        filled: true,
+                        hintStyle: TextStyle(color: Colors.grey),
+                        hintText: "jondoe123",
+                        fillColor: Colors.white70,
+                      ),
+                    ),
+                  ),
+
+                  // Password
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
+                    child: Text(
+                      "Password:",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    width: 340,
+                    height: 70,
+                    child: TextField(
+                      obscureText: true,
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(color: Colors.transparent)),
+                        filled: true,
+                        hintStyle: TextStyle(color: Colors.grey),
+                        hintText: "*****",
+                        fillColor: Colors.white70,
+                      ),
+                    ),
+                  ),
+
+                  //login button
+                  Center(
+                      child: Container(
+                    width: 200,
+                    padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          primary: ColorConstants.darkblue),
+                    ),
+                  )),
+
+                  //register text button
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                    child: Center(
+                      child: TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            'Don\'t have an account? Register now!',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          )),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ],
         ),
-      )
+      ),
     );
   }
 }
