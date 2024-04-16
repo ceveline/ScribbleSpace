@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:scribblespace/color_constants.dart';
 import 'package:scribblespace/home_screen.dart';
+import 'package:scribblespace/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,13 +19,11 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
 
-    //to navigate to the home screen after 2 seconds
-    /*
+    //to navigate to the login screen after 2 seconds
     Future.delayed(Duration(seconds: 3), () {
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => HomeScreen()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => LoginScreen()));
     });
 
-     */
   }
 
   @override
@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: Container(
         width: double.infinity, //fix the location of the background
-        color: Color(0xff21203D),
+        color: ColorConstants.darkblue,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
