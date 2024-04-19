@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'color_constants.dart';
+import 'package:intl/intl.dart';
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
@@ -34,6 +35,22 @@ class MainMenuScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final timeFormatter = DateFormat('HH:mm:ss');
+
+    String _greetingMessage() {
+      final DateTime now = DateTime.now();
+      final currentTime = timeFormatter.format(now);
+      final currentHour = int.parse(currentTime.split(':')[0]);
+
+      if (currentHour >= 0 && currentHour < 12) {
+        return "Good morning";
+      } else if (currentHour >= 12 && currentHour < 18) {
+        return "Good afternoon";
+      } else {
+        return "Good evening";
+      }
+    }
+
     return Scaffold(
       backgroundColor: ColorConstants.purple,
       floatingActionButton: FloatingActionButton.large(
@@ -50,7 +67,7 @@ class MainMenuScreen extends StatelessWidget {
       appBar: AppBar(
         //use an api for time of the day, create a method for it
         title: Text(
-          'Hello, jondoe!\nGood morning',
+          'Hello, jondoe!\n${_greetingMessage()}',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: ColorConstants.darkblue,
