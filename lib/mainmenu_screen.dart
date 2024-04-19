@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scribblespace/create_post_screen.dart';
 import 'color_constants.dart';
 import 'package:intl/intl.dart';
 
@@ -61,7 +62,10 @@ class MainMenuScreen extends StatelessWidget {
         ),
         child: const Icon(Icons.edit, color: Colors.white),
         onPressed: () {
-          // Do something
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => CreatePostScreen()),
+          );
         },
       ),
       appBar: AppBar(
@@ -90,7 +94,7 @@ class MainMenuScreen extends StatelessWidget {
               title: Text(
                 'Home',
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -106,7 +110,7 @@ class MainMenuScreen extends StatelessWidget {
               title: Text(
                 'Profile',
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -122,7 +126,7 @@ class MainMenuScreen extends StatelessWidget {
               title: Text(
                 'Trivia',
                 style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
@@ -138,7 +142,7 @@ class MainMenuScreen extends StatelessWidget {
               title: Text(
                 'Journal',
                 style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
@@ -153,7 +157,7 @@ class MainMenuScreen extends StatelessWidget {
               title: Text(
                 'Logout',
                 style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
@@ -172,7 +176,7 @@ class MainMenuScreen extends StatelessWidget {
               Text(
                 'What\'s orbitting in your mind today? ⭑☽',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
