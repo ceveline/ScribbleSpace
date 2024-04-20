@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:scribblespace/mainmenu_screen.dart';
 import 'color_constants.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:random_string/random_string.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({Key? key}) : super(key: key);
@@ -13,6 +16,18 @@ class CreatePostScreen extends StatefulWidget {
 class _CreatePostScreenState extends State<CreatePostScreen> {
   String? title, text;
   List<String> selectedItems = [];
+  File? pickedFile;
+
+  Future getImageFromGallery() async {
+    var img = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (img != null) {
+        pickedFile = File(img.path);
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,16 +62,29 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           child: Column(
             children: <Widget>[
               SizedBox(height: 10),
-              Container(
-                height: 150,
-                decoration: BoxDecoration(
-                  color: ColorConstants.darkblue,
+              GestureDetector(
+                onTap: (){getImageFromGallery();},
+                child: pickedFile != null ? ClipRRect(
                   borderRadius: BorderRadius.circular(6),
-                ),
-                width: MediaQuery.of(context).size.width,
-                child: Icon(
-                  Icons.add_a_photo,
-                  color: Colors.white,
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 13),
+                    height: 150,
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.file(pickedFile!, fit: BoxFit.cover,),
+                  ),
+                ) :
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 13),
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: ColorConstants.darkblue,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  child: Icon(
+                    Icons.add_a_photo,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               SizedBox(height: 10),
