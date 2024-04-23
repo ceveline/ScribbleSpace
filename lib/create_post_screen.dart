@@ -28,6 +28,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     });
   }
 
+  //https://www.youtube.com/watch?v=BjowvNSdWYE
+  // https://www.youtube.com/watch?v=u52TWx41oU4
 
   @override
   Widget build(BuildContext context) {
