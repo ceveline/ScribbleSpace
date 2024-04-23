@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       style: ElevatedButton.styleFrom(
-                          primary: ColorConstants.darkblue),
+                          backgroundColor: ColorConstants.darkblue),
                     ),
                   )),
 
