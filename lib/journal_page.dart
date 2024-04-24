@@ -3,16 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'color_constants.dart';
 import 'package:intl/intl.dart';
+import 'create_journal.dart';
 
-class ProfilePage extends StatefulWidget {
+class JournalPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _ProfilePageState();
+  State<StatefulWidget> createState() => _JournalPageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _JournalPageState extends State<JournalPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.large(
+        elevation: 5,
+        backgroundColor: ColorConstants.purple,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: const Icon(Icons.edit, color: Colors.white),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreateJournalScreen()),
+          );
+        },
+      ),
       backgroundColor: ColorConstants.darkblue,
       appBar: AppBar(
         backgroundColor: ColorConstants.purple,
@@ -32,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       bottomLeft: Radius.circular(25.0),
                       // Adjust the radius as needed
                       bottomRight:
-                          Radius.circular(25.0), // Adjust the radius as needed
+                      Radius.circular(25.0), // Adjust the radius as needed
                     ),
                   ),
                   child: Column(
@@ -75,38 +90,82 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     child: Center(
-                      child: Text(
-                        "My Publications",
+                      child: Column(
+                        children: [
+                      Text(
+                        "My Journal",
                         style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
+                          SizedBox(height: 15,),
+                          Container(
+                            width: 350,
+                            height: 50,
+                            child: SearchAnchor(
+
+                            builder: (BuildContext context, SearchController controller) {
+                              return SearchBar(
+
+                                controller: controller,
+                                onTap: () {
+                                  controller.openView();
+                                },
+                                onChanged: (_) {
+                                  controller.openView();
+                                },
+                                leading: const Icon(Icons.search),
+
+                              );
+                            },
+                            suggestionsBuilder: (BuildContext context, SearchController controller) {
+                              return List<ListTile>.generate(5, (int index) {
+                                final String item = 'item $index'; //Make the suggestions be the title of blogs
+                                return ListTile(
+                                  title: Text(item),
+                                  onTap: () {
+                                    setState(() {
+                                      controller.closeView(item);
+                                    });
+                                  },
+                                );
+                              });
+                            },
+                          ),
+                          ),
+                         SizedBox(height: 15,),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 15,
+                  SizedBox(height: 15.0),
+                  MyPublications(
+                    'Will swifities cause the next civil war?',
+
+
+                  ),
+                  MyPublications(
+                    'Will swifities cause the next civil war?',
+
+
+                  ),
+                  MyPublications(
+                    'Will swifities cause the next civil war?',
+
+
+                  ),
+                ],
+            ),
+                  ],
                 ),
-                MyPublications(
-                    'Will swifities cause the next civil war?',
-                    "lorem ipsum dasdadasdasdasdaswdasdadasdadsdadawdwdd.....",
-                    Image.asset('assets/profile_picture.png')),
-                MyPublications(
-                    'Will swifities cause the next civil war?',
-                    "lorem ipsum dasdadasdasdasdaswdasdadasdadsdadawdwdd.....",
-                    Image.asset('assets/icon.png')),
-                MyPublications(
-                    'Will swifities cause the next civil war?',
-                    "lorem ipsum dasdadasdasdasdaswdasdadasdadsdadawdwdd.....",
-                    Image.asset('assets/text.png'))
-              ],
-            )
-            // Purple container
-          ],
-        ),
+
       ),
+
+
+
       drawer: Drawer(
         backgroundColor: ColorConstants.darkblue,
         child: ListView(
@@ -199,7 +258,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-Container MyPublications(String title, String content, Image picture) {
+Container MyPublications(String title) {
   DateTime now = DateTime.now();
   String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
   return Container(
@@ -208,27 +267,19 @@ Container MyPublications(String title, String content, Image picture) {
       color: Colors.white,
       borderRadius: BorderRadius.circular(25.0),
     ),
-    height: 200,
+    height: 120,
     width: 350,
     child: Stack(
       children: [
         // Image
-        Positioned(
-          top: 0,
-          left: 0,
-          child: Container(
-            width: 100, // Width of the image
-            height: 100, // Height of the image
-            child: picture,
-          ),
-        ),
+
         // Title and content
         Positioned(
           top: 10,
-          left: 110,
+          left: 10,
           // Adjust this value to position the title next to the image
           child: Container(
-           width: 230,
+            width: 350,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -237,21 +288,10 @@ Container MyPublications(String title, String content, Image picture) {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
-                SizedBox(height: 8), // Add some space between title and content
-                // Content
-
-                Text(
-                  content,
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-
               ],
             ),
           ),
@@ -260,9 +300,9 @@ Container MyPublications(String title, String content, Image picture) {
             bottom: 10,
             right: 10,
             child: Text('${formattedDate}',
-            style: TextStyle(
-              fontSize: 15
-            ),))
+              style: TextStyle(
+                  fontSize: 15
+              ),))
 
       ],
 

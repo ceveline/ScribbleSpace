@@ -139,7 +139,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 color: ColorConstants.purple),
                           ),
                           style: ElevatedButton.styleFrom(
-                              primary: ColorConstants.darkblue),
+                              backgroundColor: ColorConstants.darkblue),
                         ),
                       )),
                   
