@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:scribblespace/mainmenu_screen.dart';
 import 'SplashScreen.dart';
-import 'color_constants.dart';
-import 'profile_page.dart';
-import 'journal_post.dart';
+import 'registration_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
 void main() {
@@ -15,13 +14,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          color: ColorConstants.darkblue,
-        ),
-      ),
       debugShowCheckedModeBanner: false,
-      home: ProfilePage(),
+      home: MainMenuScreen(),
 
     );
   }
