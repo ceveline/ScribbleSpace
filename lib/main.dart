@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'SplashScreen.dart';
 import 'color_constants.dart';
+import 'profile_page.dart';
+import 'journal_post.dart';
 import 'package:page_transition/page_transition.dart';
 
 void main() {
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: ProfilePage(),
 
     );
   }
