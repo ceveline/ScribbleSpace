@@ -1,123 +1,161 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:scribblespace/journal_page.dart';
 import 'color_constants.dart';
 
 class EditJournalScreen extends StatefulWidget {
+  final String title, text;
+  final TextEditingController? titleController;
+  final TextEditingController? textController;
+
+  EditJournalScreen({
+    required this.title,
+    required this.text,
+    this.titleController,
+    this.textController,
+  });
   @override
   State<StatefulWidget> createState() => _EditJournalScreenState();
-
 }
 
 class _EditJournalScreenState extends State<EditJournalScreen> {
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _journalTextController = TextEditingController();
+  late TextEditingController _titleController;
+  late TextEditingController _textController;
 
+ @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _titleController = widget.titleController ?? TextEditingController(text: widget.title);
+    _textController = widget.textController ?? TextEditingController(text: widget.text);
+ }
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _textController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: ColorConstants.purple,
       appBar: AppBar(
-        title: Text('Edit Journal',
+        title: Text(
+          'Edit Journal',
           style: TextStyle(
             color: Colors.white,
-          ),),
+            fontSize: 27,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => JournalPage()),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: ColorConstants.darkblue,
+        toolbarHeight: 80,
       ),
       body: SingleChildScrollView(
-        child: Stack(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //username
-                    Container(
-                      padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
-                      child: Text(
-                        "Title:",
-                        style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      width: 340,
-                      height: 70,
-                      child: TextField(
-                        controller: _titleController,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                              borderSide: BorderSide(color: Colors.transparent)),
-                          filled: true,
-                          fillColor: Colors.white70,
+              TextField(
+                controller: _titleController,
+                decoration: InputDecoration(
+                  hintText: "Title",
+                ),
+                keyboardType: TextInputType.multiline,
+                minLines: 1,
+                maxLines: 2,
+                onChanged: (val) {
+                  // Update the title text
+                  // You can add any additional logic here if needed
+                },
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _textController,
+                decoration: InputDecoration(
+                  hintText: "Text",
+                ),
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                style: TextStyle(fontSize: 20),
+                onChanged: (val) {
+                  // Update the text
+                  // You can add any additional logic here if needed
+                },
+              ),
+              Center(
+                child: Container(
+                  width: 300,
+                  padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        width: 150,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
                         ),
-                      ),
-                    ),
+                        child: TextButton(
+                          onPressed: () {
+                            //Simulate updating database
 
-                    // Password
-                    Container(
-                      padding: EdgeInsets.fromLTRB(20, 50, 20, 5),
-                      child: Text(
-                        "Text:",
-                        style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      width: 340,
-                      child: TextField(
-
-                        controller:  _journalTextController,
-                        minLines: 10, // Set this
-                        maxLines: 20, // and this
-                        keyboardType: TextInputType.multiline,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                              borderSide: BorderSide(color: Colors.transparent)),
-                          filled: true,
-                          fillColor: Colors.white70,
-                        ),
-                      ),
-                    ),
-                    // Email
-
-                    Center(
-                        child: Container(
-                          width: 300,
-                          padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                          ElevatedButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Update',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold, color: ColorConstants.darkblue),
+                          },
+                          child: Text(
+                            'Update',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: ColorConstants.darkblue,
                             ),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white),
                           ),
-                              ElevatedButton(
-                                onPressed: () {},
-                                child: Text(
-                                  'Delete',
-                                  style: TextStyle(
-                                      fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: ColorConstants.darkblue),
-                              ),
-                      ]
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Container(
+                        width: 150,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: ColorConstants.darkblue,
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            // Handle delete button press
+                          },
+                          child: Text(
+                            'Delete',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
-                        )),
-                  ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ]),
+            ],
+          ),
+        ),
       ),
     );
   }
-
 }

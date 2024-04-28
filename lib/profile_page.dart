@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'color_constants.dart';
 import 'package:intl/intl.dart';
+import 'view_profile.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -46,9 +47,15 @@ class _ProfilePageState extends State<ProfilePage> {
                             Container(
                               height: 100,
                               width: 120,
-                              child: Image.asset(
-                                'assets/profile_picture.png',
-                              ),
+                              child: IconButton(
+                                icon: Image.asset('assets/profile_picture.png'),
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => ViewProfileScreen()),
+                                  );
+                                },
+                              )
                             ),
                             SizedBox(width: 10),
                             Expanded(

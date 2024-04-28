@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'color_constants.dart';
+import 'view_profile.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
@@ -19,8 +20,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
         title: Text('Edit Profile',
         style: TextStyle(
-          color: Colors.white,
-        ),),
+        color: Colors.white,
+        fontSize: 27,
+    ),),
+        backgroundColor: ColorConstants.darkblue,
+        toolbarHeight: 80,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => ViewProfileScreen()),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Stack(
@@ -40,7 +56,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 300,
+              height: 250,
             ),
             //username
             Container(

@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'color_constants.dart';
 import 'package:intl/intl.dart';
 import 'create_journal.dart';
+import 'edit_journal.dart';
 
 class JournalPage extends StatefulWidget {
   @override
@@ -11,6 +12,18 @@ class JournalPage extends StatefulWidget {
 }
 
 class _JournalPageState extends State<JournalPage> {
+  // Dummy code this will be retrieved from firebase
+  List<String> publicationTitles = [
+    "Publication 1",
+    "Publication 2",
+    "Publication 3",
+  ];
+  List<String> publicationTexts = [
+    "Hello",
+    "Goodbye",
+    "The Beatles",
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +60,7 @@ class _JournalPageState extends State<JournalPage> {
                       bottomLeft: Radius.circular(25.0),
                       // Adjust the radius as needed
                       bottomRight:
-                      Radius.circular(25.0), // Adjust the radius as needed
+                          Radius.circular(25.0), // Adjust the radius as needed
                     ),
                   ),
                   child: Column(
@@ -92,80 +105,103 @@ class _JournalPageState extends State<JournalPage> {
                     child: Center(
                       child: Column(
                         children: [
-                      Text(
-                        "My Journal",
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                          SizedBox(height: 15,),
+                          Text(
+                            "My Journal",
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
                           Container(
                             width: 350,
                             height: 50,
                             child: SearchAnchor(
-
-                            builder: (BuildContext context, SearchController controller) {
-                              return SearchBar(
-
-                                controller: controller,
-                                onTap: () {
-                                  controller.openView();
-                                },
-                                onChanged: (_) {
-                                  controller.openView();
-                                },
-                                leading: const Icon(Icons.search),
-
-                              );
-                            },
-                            suggestionsBuilder: (BuildContext context, SearchController controller) {
-                              return List<ListTile>.generate(5, (int index) {
-                                final String item = 'item $index'; //Make the suggestions be the title of blogs
-                                return ListTile(
-                                  title: Text(item),
+                              builder: (BuildContext context,
+                                  SearchController controller) {
+                                return SearchBar(
+                                  controller: controller,
                                   onTap: () {
-                                    setState(() {
-                                      controller.closeView(item);
-                                    });
+                                    controller.openView();
                                   },
+                                  onChanged: (_) {
+                                    controller.openView();
+                                  },
+                                  leading: const Icon(Icons.search),
                                 );
-                              });
-                            },
+                              },
+                              suggestionsBuilder: (BuildContext context,
+                                  SearchController controller) {
+                                return List<ListTile>.generate(5, (int index) {
+                                  final String item =
+                                      'item $index'; //Make the suggestions be the title of blogs
+                                  return ListTile(
+                                    title: Text(item),
+                                    onTap: () {
+                                      setState(() {
+                                        controller.closeView(item);
+                                      });
+                                    },
+                                  );
+                                });
+                              },
+                            ),
                           ),
+                          SizedBox(
+                            height: 15,
                           ),
-                         SizedBox(height: 15,),
                         ],
                       ),
                     ),
                   ),
                 ),
-                  SizedBox(height: 15.0),
-                  MyPublications(
-                    'Will swifities cause the next civil war?',
+                SizedBox(height: 15.0),
+                Container(
+                  width: 350,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: publicationTitles.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return MyPublications(
+                        publicationTitles[index],
+                        publicationTexts[index],
+                        () {
+                          showDialog(context: context,
+                              builder: (BuildContext context) {
+                            return  AlertDialog(
+                                title:  Text('${publicationTitles[index]}'),
+                                content: Text('${publicationTexts[index]}'),
+                                actions: [
+                                  TextButton(onPressed: () {}, child: const Text("View")),
+                                  TextButton(onPressed: () {  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                      builder: (context) => EditJournalScreen(
+                                    title: publicationTitles[index],
+                                    text: publicationTexts[
+                                    index], // Assuming you have a list of publication texts
+                                  ),
+                                    ));}, child: const Text("Edit"))
+                                ],
+                              );
 
+                              });
+                          // Navigate to EditJournalScreen with publication details
 
+                        }
+                      );
+                    },
                   ),
-                  MyPublications(
-                    'Will swifities cause the next civil war?',
-
-
-                  ),
-                  MyPublications(
-                    'Will swifities cause the next civil war?',
-
-
-                  ),
-                ],
-            ),
-                  ],
                 ),
-
+              ],
+            ),
+          ],
+        ),
       ),
-
-
-
       drawer: Drawer(
         backgroundColor: ColorConstants.darkblue,
         child: ListView(
@@ -226,7 +262,7 @@ class _JournalPageState extends State<JournalPage> {
             //journal
             ListTile(
               leading:
-              Icon(Icons.menu_book_rounded, size: 40, color: Colors.white),
+                  Icon(Icons.menu_book_rounded, size: 40, color: Colors.white),
               title: Text(
                 'Journal',
                 style: TextStyle(
@@ -258,54 +294,57 @@ class _JournalPageState extends State<JournalPage> {
   }
 }
 
-Container MyPublications(String title) {
+GestureDetector MyPublications(String title, String text, GestureTapCallback onTap) {
   DateTime now = DateTime.now();
   String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
-  return Container(
-    margin: const EdgeInsets.only(bottom: 15),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(25.0),
-    ),
-    height: 120,
-    width: 350,
-    child: Stack(
-      children: [
-        // Image
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(25.0),
+      ),
+      height: 120,
+      width: 350,
+      child: Stack(
+        children: [
+          // Image
 
-        // Title and content
-        Positioned(
-          top: 10,
-          left: 10,
-          // Adjust this value to position the title next to the image
-          child: Container(
-            width: 350,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title
-
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
+          // Title and content
+          Positioned(
+            top: 10,
+            left: 10,
+            // Adjust this value to position the title next to the image
+            child: Container(
+              width: 350,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        Positioned(
+          Positioned(
             bottom: 10,
             right: 10,
-            child: Text('${formattedDate}',
+            child: Text(
+              '${formattedDate}',
               style: TextStyle(
-                  fontSize: 15
-              ),))
-
-      ],
-
+                fontSize: 15,
+              ),
+            ),
+          )
+        ],
+      ),
     ),
   );
 }
