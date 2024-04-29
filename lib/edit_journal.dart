@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:scribblespace/journal_page.dart';
 import 'color_constants.dart';
+import 'journal_post.dart';
 
 class EditJournalScreen extends StatefulWidget {
   final String title, text;
@@ -53,7 +54,7 @@ class _EditJournalScreenState extends State<EditJournalScreen> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => JournalPage()),
+              MaterialPageRoute(builder: (context) => CreateJournalPost(title: "${ _titleController.text}", text:"${ _textController.text}")),
             );
           },
           icon: Icon(

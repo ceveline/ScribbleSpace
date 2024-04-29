@@ -30,27 +30,16 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
         toolbarHeight: 80,
         leading: IconButton(
           onPressed: () {
-            Navigator.popUntil(context, ModalRoute.withName('/')); // Pop until you reach the root route
-
             // Check the previous route and navigate accordingly
-            if (ModalRoute.of(context)?.settings.name == '/journal') {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => JournalPage()),
-              );
-            } else if (ModalRoute.of(context)?.settings.name == '/profile') {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
-              );
-            }
+            Navigator.pushNamed(context, '/journal');
+
+            Navigator.pushNamed(context, '/profile');
           },
           icon: Icon(
             Icons.arrow_back_ios,
             color: Colors.white,
           ),
         ),
-
       ),
       body: SingleChildScrollView(
         child: Stack(children: [

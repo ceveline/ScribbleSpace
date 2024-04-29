@@ -11,6 +11,22 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+  List<String> publicationTitles = [
+    "Publication 1",
+    "Publication 2",
+    "Publication 3",
+  ];
+  List<String> publicationTexts = [
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pharetra pharetra massa massa ultricies. Semper eget duis at tellus at. Arcu cursus euismod quis viverra nibh cras pulvinar. Rhoncus dolor purus non enim praesent elementum facilisis leo. Pretium viverra suspendisse potenti nullam ac.",
+    "Goodbye",
+    "The Beatles",
+  ];
+  List<Image> publicationImages = [
+    Image.asset('assets/profile_picture.png'),
+    Image.asset('assets/icon.png'),
+    Image.asset('assets/text.png'),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,18 +112,46 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(
                   height: 15,
                 ),
-                MyPublications(
-                    'Will swifities cause the next civil war?',
-                    "lorem ipsum dasdadasdasdasdaswdasdadasdadsdadawdwdd.....",
-                    Image.asset('assets/profile_picture.png')),
-                MyPublications(
-                    'Will swifities cause the next civil war?',
-                    "lorem ipsum dasdadasdasdasdaswdasdadasdadsdadawdwdd.....",
-                    Image.asset('assets/icon.png')),
-                MyPublications(
-                    'Will swifities cause the next civil war?',
-                    "lorem ipsum dasdadasdasdasdaswdasdadasdadsdadawdwdd.....",
-                    Image.asset('assets/text.png'))
+                Container(
+
+                  width: 350,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: publicationTitles.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return MyPublications(
+                          publicationTitles[index],
+                          publicationTexts[index],
+                              publicationImages[index],
+                              () {
+                            showDialog(context: context,
+                                builder: (BuildContext context) {
+                                  String content = publicationTexts[index]; // Initialize content with full text
+                                  if (publicationTexts[index].length > 80) {
+                                    content = publicationTexts[index].substring(0, 80) + "...";
+                                  }
+                                  return  AlertDialog(
+                                    title:  Text('${publicationTitles[index]}'),
+                                    content: Text('${content}'),
+                                    actions: [
+                                      TextButton(onPressed: () {
+                                      //Enter logic to view post here
+                                      }, child: const Text("View")),
+                                      TextButton(onPressed: () {
+                                      //Enter logic to edit post here
+                                      }, child: const Text("Edit"))
+                                    ],
+                                  );
+
+                                });
+                            // Navigate to EditJournalScreen with publication details
+
+                          }
+                      );
+                    },
+                  ),
+                ),
               ],
             )
             // Purple container
@@ -206,10 +250,15 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-Container MyPublications(String title, String content, Image picture) {
+GestureDetector MyPublications(String title, String content, Image picture, GestureTapCallback onTap) {
+  if(content.length > 80) {
+    content = content.substring(0, 75) + "...";
+  }
   DateTime now = DateTime.now();
   String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
-  return Container(
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
     margin: const EdgeInsets.only(bottom: 15),
     decoration: BoxDecoration(
       color: Colors.white,
@@ -272,7 +321,7 @@ Container MyPublications(String title, String content, Image picture) {
             ),))
 
       ],
-
+    ),
     ),
   );
 }

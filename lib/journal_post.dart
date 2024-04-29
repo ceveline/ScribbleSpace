@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scribblespace/create_journal.dart';
 import 'color_constants.dart';
 import 'journal_page.dart';
+import 'edit_journal.dart';
 
 class CreateJournalPost extends StatefulWidget {
   final String title;
@@ -43,29 +44,45 @@ class _CreateJournalState extends State<CreateJournalPost> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.purple,
-      appBar: AppBar(
-        title: Text(
-          '${_titleController.text}',
-          style: TextStyle(
-            color: Colors.white,
+          backgroundColor: ColorConstants.purple,
+          appBar: AppBar(
+            title: Text(
+              '${_titleController.text}',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            backgroundColor: ColorConstants.darkblue,
+            toolbarHeight: 80,
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => JournalPage()),
+                );
+              },
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+            ),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => EditJournalScreen(title: "${ _titleController.text}", text:"${ _textController.text}"))
+                  );},
+                icon: Icon(Icons.edit, color: Colors.white),
+              ),
+              IconButton(
+                onPressed: () {
+                  // Add logic for delete/garbage action
+                },
+                icon: Icon(Icons.delete, color: Colors.red),
+              ),
+
+            ],
           ),
-        ),
-        backgroundColor: ColorConstants.darkblue,
-        toolbarHeight: 80,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => JournalPage()),
-            );
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-          ),
-        ),
-      ),
       body: SingleChildScrollView(
           child: Column(children: [
         Padding(

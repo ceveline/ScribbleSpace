@@ -15,6 +15,7 @@ class JournalPage extends StatefulWidget {
 
 class _JournalPageState extends State<JournalPage> {
   TextEditingController _searchController = TextEditingController();
+
   // Dummy code this will be retrieved from firebase
   List<String> publicationTitles = [
     "Publication 1",
@@ -78,15 +79,17 @@ class _JournalPageState extends State<JournalPage> {
                                 height: 100,
                                 width: 120,
                                 child: IconButton(
-                                  icon: Image.asset('assets/profile_picture.png'),
+                                  icon:
+                                      Image.asset('assets/profile_picture.png'),
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => ViewProfileScreen()),
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ViewProfileScreen()),
                                     );
                                   },
-                                )
-                            ),
+                                )),
                             SizedBox(width: 10),
                             Expanded(
                               child: Text(
@@ -129,7 +132,8 @@ class _JournalPageState extends State<JournalPage> {
                             width: 350,
                             height: 50,
                             child: SearchAnchor(
-                              builder: (BuildContext context, SearchController controller) {
+                              builder: (BuildContext context,
+                                  SearchController controller) {
                                 return TextField(
                                   controller: _searchController,
                                   decoration: InputDecoration(
@@ -144,23 +148,29 @@ class _JournalPageState extends State<JournalPage> {
                                   ),
                                   onSubmitted: (String query) {
                                     // Find the index of the query in publicationTitles
-                                    int index = publicationTitles.indexOf(query);
+                                    int index =
+                                        publicationTitles.indexOf(query);
                                     if (index != -1) {
                                       // Show the AlertDialog
                                       showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                          title: Text('${publicationTitles[index]}'),
-                                          content: Text('${publicationTexts[index]}'),
+                                          title: Text(
+                                              '${publicationTitles[index]}'),
+                                          content: Text(
+                                              '${publicationTexts[index]}'),
                                           actions: [
                                             TextButton(
                                               onPressed: () {
                                                 Navigator.pushReplacement(
                                                   context,
                                                   MaterialPageRoute(
-                                                    builder: (context) => CreateJournalPost(
-                                                      title: publicationTitles[index],
-                                                      text: publicationTexts[index],
+                                                    builder: (context) =>
+                                                        CreateJournalPost(
+                                                      title: publicationTitles[
+                                                          index],
+                                                      text: publicationTexts[
+                                                          index],
                                                     ),
                                                   ),
                                                 );
@@ -172,9 +182,12 @@ class _JournalPageState extends State<JournalPage> {
                                                 Navigator.pushReplacement(
                                                   context,
                                                   MaterialPageRoute(
-                                                    builder: (context) => EditJournalScreen(
-                                                      title: publicationTitles[index],
-                                                      text: publicationTexts[index],
+                                                    builder: (context) =>
+                                                        EditJournalScreen(
+                                                      title: publicationTitles[
+                                                          index],
+                                                      text: publicationTexts[
+                                                          index],
                                                     ),
                                                   ),
                                                 );
@@ -185,20 +198,21 @@ class _JournalPageState extends State<JournalPage> {
                                         ),
                                       );
                                     } else {
-                                      if(_searchController.text.isEmpty) {
-                                        showInSnackBar(context, "Search is empty");
-
+                                      if (_searchController.text.isEmpty) {
+                                        showInSnackBar(
+                                            context, "Search is empty");
                                       } else {
                                         showInSnackBar(context,
-                                            "${_searchController
-                                                .text} does not exist");
+                                            "${_searchController.text} does not exist");
                                       }
                                     }
                                   },
                                 );
                               },
-                              suggestionsBuilder: (BuildContext context, SearchController controller) {
-                                return List<Widget>.generate(publicationTitles.length, (int index) {
+                              suggestionsBuilder: (BuildContext context,
+                                  SearchController controller) {
+                                return List<Widget>.generate(
+                                    publicationTitles.length, (int index) {
                                   final String title = publicationTitles[index];
                                   return ListTile(
                                     title: Text(title),
@@ -212,8 +226,6 @@ class _JournalPageState extends State<JournalPage> {
                               },
                             ),
                           ),
-
-
                           SizedBox(
                             height: 15,
                           ),
@@ -231,37 +243,17 @@ class _JournalPageState extends State<JournalPage> {
                     itemCount: publicationTitles.length,
                     itemBuilder: (BuildContext context, int index) {
                       return MyPublications(
-                        publicationTitles[index],
-                        publicationTexts[index],
-                        () {
-                          showDialog(context: context,
-                              builder: (BuildContext context) {
-                            return  AlertDialog(
-                                title:  Text('${publicationTitles[index]}'),
-                                content: Text('${publicationTexts[index]}'),
-                                actions: [
-                                  TextButton(onPressed: () {
-                                    Navigator.pushReplacement(context,
-                                    MaterialPageRoute(builder: (context) => CreateJournalPost(title: publicationTitles[index], text: publicationTexts[
-                                    index],)));
-                                  }, child: const Text("View")),
-                                  TextButton(onPressed: () {  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                      builder: (context) => EditJournalScreen(
-                                    title: publicationTitles[index],
-                                    text: publicationTexts[
-                                    index], // Assuming you have a list of publication texts
-                                  ),
-                                    ));}, child: const Text("Edit"))
-                                ],
-                              );
-
-                              });
-                          // Navigate to EditJournalScreen with publication details
-
-                        }
-                      );
+                          publicationTitles[index], publicationTexts[index],
+                          () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CreateJournalPost(
+                                      title: publicationTitles[index],
+                                      text: publicationTexts[index],
+                                    )));
+                      });
+                      // Navigate to EditJournalScreen with publication details
                     },
                   ),
                 ),
@@ -361,11 +353,14 @@ class _JournalPageState extends State<JournalPage> {
     );
   }
 }
+
 void showInSnackBar(BuildContext context, String value) {
   var snackBar = SnackBar(content: Text(value));
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
-GestureDetector MyPublications(String title, String text, GestureTapCallback onTap) {
+
+GestureDetector MyPublications(
+    String title, String text, GestureTapCallback onTap) {
   DateTime now = DateTime.now();
   String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
   return GestureDetector(
@@ -418,5 +413,4 @@ GestureDetector MyPublications(String title, String text, GestureTapCallback onT
       ),
     ),
   );
-
 }

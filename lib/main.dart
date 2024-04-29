@@ -5,6 +5,7 @@ import 'registration_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'journal_page.dart';
 import 'profile_page.dart';
+import 'journal_post.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        '/': (context) => JournalPage(),
+        '/': (context) => MainMenuScreen(),
         '/journal': (context) => JournalPage(),
         '/profile': (context) => ProfilePage(),
       },
