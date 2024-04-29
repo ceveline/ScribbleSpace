@@ -151,56 +151,18 @@ class _JournalPageState extends State<JournalPage> {
                                     int index =
                                         publicationTitles.indexOf(query);
                                     if (index != -1) {
-                                      // Show the AlertDialog
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          title: Text(
-                                              '${publicationTitles[index]}'),
-                                          content: Text(
-                                              '${publicationTexts[index]}'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        CreateJournalPost(
-                                                      title: publicationTitles[
-                                                          index],
-                                                      text: publicationTexts[
-                                                          index],
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              child: Text("View"),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        EditJournalScreen(
-                                                      title: publicationTitles[
-                                                          index],
-                                                      text: publicationTexts[
-                                                          index],
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              child: Text("Edit"),
-                                            ),
-                                          ],
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CreateJournalPost(
+                                            title: publicationTitles[index],
+                                            text: publicationTexts[index],
+                                          ),
                                         ),
                                       );
                                     } else {
                                       if (_searchController.text.isEmpty) {
-                                        showInSnackBar(
-                                            context, "Search is empty");
+                                        showInSnackBar(context, "Search is empty");
                                       } else {
                                         showInSnackBar(context,
                                             "${_searchController.text} does not exist");
