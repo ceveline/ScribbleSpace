@@ -30,10 +30,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
         toolbarHeight: 80,
         leading: IconButton(
           onPressed: () {
-            // Check the previous route and navigate accordingly
-            Navigator.pushNamed(context, '/journal');
-
-            Navigator.pushNamed(context, '/profile');
+            Navigator.pop(context);
           },
           icon: Icon(
             Icons.arrow_back_ios,

@@ -17,11 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      routes: {
-        '/': (context) => JournalPage(),
-        '/journal': (context) => JournalPage(),
-        '/profile': (context) => ProfilePage(),
-      },
+      home: ProfilePage(),
     );
   }
 }
