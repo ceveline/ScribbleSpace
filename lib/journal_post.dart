@@ -1,43 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:scribblespace/create_journal.dart';
 import 'color_constants.dart';
+import 'journal_page.dart';
 
+class CreateJournalPost extends StatefulWidget {
+  final String title;
+  final String text;
+  final TextEditingController? titleController;
+  final TextEditingController? textController;
 
+  CreateJournalPost({
+    required this.title,
+    required this.text,
+    this.titleController,
+    this.textController,
+  });
 
-class CreateJournalScreen extends StatelessWidget {
- // final String journalTitle;
-  //CreateJournalScreen({required this.journalTitle});
+  @override
+  State<StatefulWidget> createState() => _CreateJournalState();
+}
+
+class _CreateJournalState extends State<CreateJournalPost> {
+  late TextEditingController _titleController;
+  late TextEditingController _textController;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController =
+        widget.titleController ?? TextEditingController(text: widget.title);
+    _textController =
+        widget.textController ?? TextEditingController(text: widget.text);
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _textController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.purple,
       appBar: AppBar(
-        title: Text('test',
+        title: Text(
+          '${_titleController.text}',
           style: TextStyle(
             color: Colors.white,
-          ),),
+          ),
+        ),
+        backgroundColor: ColorConstants.darkblue,
+        toolbarHeight: 80,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => JournalPage()),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-            children: [
-              Padding(padding: EdgeInsets.all(20),
-                child:
-              Container(
-                child: Text(
-
-                  'hello',
-                  style: TextStyle(
-                      fontSize: 20,
+          child: Column(children: [
+        Padding(
+          padding: EdgeInsets.all(20),
+          child: Container(
+            child: Text(
+              '${_textController.text}',
+              style: TextStyle(
+                  fontSize: 20,
                   color: Colors.white,
                   fontWeight: FontWeight.bold),
-                ),
-              ),
-              ),
-   ])
-    ),
+            ),
+          ),
+        ),
+      ])),
     );
-
-
   }
-
 }

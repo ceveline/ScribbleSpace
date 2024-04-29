@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'color_constants.dart';
 import 'edit_profile.dart';
 import 'profile_page.dart';
+import 'journal_page.dart';
 
 class ViewProfileScreen extends StatefulWidget {
   @override
@@ -29,16 +30,27 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
         toolbarHeight: 80,
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
-            );
+            Navigator.popUntil(context, ModalRoute.withName('/')); // Pop until you reach the root route
+
+            // Check the previous route and navigate accordingly
+            if (ModalRoute.of(context)?.settings.name == '/journal') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => JournalPage()),
+              );
+            } else if (ModalRoute.of(context)?.settings.name == '/profile') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+            }
           },
           icon: Icon(
             Icons.arrow_back_ios,
             color: Colors.white,
           ),
         ),
+
       ),
       body: SingleChildScrollView(
         child: Stack(children: [
@@ -164,23 +176,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                     ),
                   ),
                 ),
-                Center(
-                    child: Container(
-                  width: 200,
-                  padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Save',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorConstants.darkblue),
-                  ),
-                )),
               ],
             ),
           ),

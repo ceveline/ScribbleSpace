@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: IconButton(
                                 icon: Image.asset('assets/profile_picture.png'),
                                 onPressed: () {
-                                  Navigator.pushReplacement(
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => ViewProfileScreen()),
                                   );

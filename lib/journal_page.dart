@@ -5,6 +5,8 @@ import 'color_constants.dart';
 import 'package:intl/intl.dart';
 import 'create_journal.dart';
 import 'edit_journal.dart';
+import 'journal_post.dart';
+import 'view_profile.dart';
 
 class JournalPage extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class JournalPage extends StatefulWidget {
 }
 
 class _JournalPageState extends State<JournalPage> {
+  TextEditingController _searchController = TextEditingController();
   // Dummy code this will be retrieved from firebase
   List<String> publicationTitles = [
     "Publication 1",
@@ -72,11 +75,17 @@ class _JournalPageState extends State<JournalPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              height: 100,
-                              width: 120,
-                              child: Image.asset(
-                                'assets/profile_picture.png',
-                              ),
+                                height: 100,
+                                width: 120,
+                                child: IconButton(
+                                  icon: Image.asset('assets/profile_picture.png'),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => ViewProfileScreen()),
+                                    );
+                                  },
+                                )
                             ),
                             SizedBox(width: 10),
                             Expanded(
@@ -120,29 +129,82 @@ class _JournalPageState extends State<JournalPage> {
                             width: 350,
                             height: 50,
                             child: SearchAnchor(
-                              builder: (BuildContext context,
-                                  SearchController controller) {
-                                return SearchBar(
-                                  controller: controller,
-                                  onTap: () {
-                                    controller.openView();
+                              builder: (BuildContext context, SearchController controller) {
+                                return TextField(
+                                  controller: _searchController,
+                                  decoration: InputDecoration(
+                                    hintText: "Search",
+                                    prefixIcon: Icon(Icons.search),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                  ),
+                                  onSubmitted: (String query) {
+                                    // Find the index of the query in publicationTitles
+                                    int index = publicationTitles.indexOf(query);
+                                    if (index != -1) {
+                                      // Show the AlertDialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Text('${publicationTitles[index]}'),
+                                          content: Text('${publicationTexts[index]}'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => CreateJournalPost(
+                                                      title: publicationTitles[index],
+                                                      text: publicationTexts[index],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: Text("View"),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => EditJournalScreen(
+                                                      title: publicationTitles[index],
+                                                      text: publicationTexts[index],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: Text("Edit"),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      if(_searchController.text.isEmpty) {
+                                        showInSnackBar(context, "Search is empty");
+
+                                      } else {
+                                        showInSnackBar(context,
+                                            "${_searchController
+                                                .text} does not exist");
+                                      }
+                                    }
                                   },
-                                  onChanged: (_) {
-                                    controller.openView();
-                                  },
-                                  leading: const Icon(Icons.search),
                                 );
                               },
-                              suggestionsBuilder: (BuildContext context,
-                                  SearchController controller) {
-                                return List<ListTile>.generate(5, (int index) {
-                                  final String item =
-                                      'item $index'; //Make the suggestions be the title of blogs
+                              suggestionsBuilder: (BuildContext context, SearchController controller) {
+                                return List<Widget>.generate(publicationTitles.length, (int index) {
+                                  final String title = publicationTitles[index];
                                   return ListTile(
-                                    title: Text(item),
+                                    title: Text(title),
                                     onTap: () {
                                       setState(() {
-                                        controller.closeView(item);
+                                        controller.closeView(title);
                                       });
                                     },
                                   );
@@ -150,6 +212,8 @@ class _JournalPageState extends State<JournalPage> {
                               },
                             ),
                           ),
+
+
                           SizedBox(
                             height: 15,
                           ),
@@ -176,7 +240,11 @@ class _JournalPageState extends State<JournalPage> {
                                 title:  Text('${publicationTitles[index]}'),
                                 content: Text('${publicationTexts[index]}'),
                                 actions: [
-                                  TextButton(onPressed: () {}, child: const Text("View")),
+                                  TextButton(onPressed: () {
+                                    Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (context) => CreateJournalPost(title: publicationTitles[index], text: publicationTexts[
+                                    index],)));
+                                  }, child: const Text("View")),
                                   TextButton(onPressed: () {  Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
@@ -293,7 +361,10 @@ class _JournalPageState extends State<JournalPage> {
     );
   }
 }
-
+void showInSnackBar(BuildContext context, String value) {
+  var snackBar = SnackBar(content: Text(value));
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
 GestureDetector MyPublications(String title, String text, GestureTapCallback onTap) {
   DateTime now = DateTime.now();
   String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
@@ -347,4 +418,5 @@ GestureDetector MyPublications(String title, String text, GestureTapCallback onT
       ),
     ),
   );
+
 }
