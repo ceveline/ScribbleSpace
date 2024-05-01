@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'color_constants.dart';
 import 'package:intl/intl.dart';
 import 'view_profile.dart';
+import 'mainmenu_screen.dart';
+import 'journal_page.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -179,6 +181,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: Colors.white,
                 ),
               ),
+              onTap: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MainMenuScreen())),
             ),
             SizedBox(
               height: 30,
@@ -195,6 +201,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: Colors.white,
                 ),
               ),
+              onTap: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProfilePage())),
+
             ),
             SizedBox(
               height: 30,
@@ -226,6 +237,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
+              onTap: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => JournalPage())),
+
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height - 430,

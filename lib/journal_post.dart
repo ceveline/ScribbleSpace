@@ -68,6 +68,7 @@ class _CreateJournalState extends State<CreateJournalPost> {
             ),
             actions: [
               IconButton(
+                iconSize: 30,
                 onPressed: () {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => EditJournalScreen(title: "${ _titleController.text}", text:"${ _textController.text}"))
@@ -75,6 +76,7 @@ class _CreateJournalState extends State<CreateJournalPost> {
                 icon: Icon(Icons.edit, color: Colors.white),
               ),
               IconButton(
+                iconSize: 30,
                 onPressed: () {
                   // Add logic for delete/garbage action
                 },

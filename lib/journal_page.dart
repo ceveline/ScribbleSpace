@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,6 +8,8 @@ import 'package:intl/intl.dart';
 import 'create_journal.dart';
 import 'edit_journal.dart';
 import 'journal_post.dart';
+import 'profile_page.dart';
+import 'mainmenu_screen.dart';
 import 'view_profile.dart';
 
 class JournalPage extends StatefulWidget {
@@ -15,17 +19,20 @@ class JournalPage extends StatefulWidget {
 
 class _JournalPageState extends State<JournalPage> {
   TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   // Dummy code this will be retrieved from firebase
   List<String> publicationTitles = [
     "Publication 1",
     "Publication 2",
     "Publication 3",
+    "Journal 1"
   ];
   List<String> publicationTexts = [
-    "Hello",
+    "Hello my name is Trevor",
     "Goodbye",
-    "The Beatles",
+    "The Beatles were once my favourite band",
+    "This is my journal entry",
   ];
 
   @override
@@ -146,15 +153,22 @@ class _JournalPageState extends State<JournalPage> {
                                       borderSide: BorderSide.none,
                                     ),
                                   ),
+                                  onChanged: (String query) {
+                                    setState(() {
+                                      _searchQuery = query;
+                                    });
+                                  },
                                   onSubmitted: (String query) {
+                                    query.toLowerCase();
                                     // Find the index of the query in publicationTitles
                                     int index =
-                                        publicationTitles.indexOf(query);
+                                    publicationTitles.indexWhere((title) => title.toLowerCase() == query);
                                     if (index != -1) {
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => CreateJournalPost(
+                                          builder: (context) =>
+                                              CreateJournalPost(
                                             title: publicationTitles[index],
                                             text: publicationTexts[index],
                                           ),
@@ -162,7 +176,8 @@ class _JournalPageState extends State<JournalPage> {
                                       );
                                     } else {
                                       if (_searchController.text.isEmpty) {
-                                        showInSnackBar(context, "Search is empty");
+                                        showInSnackBar(
+                                            context, "Search is empty");
                                       } else {
                                         showInSnackBar(context,
                                             "${_searchController.text} does not exist");
@@ -173,23 +188,24 @@ class _JournalPageState extends State<JournalPage> {
                               },
                               suggestionsBuilder: (BuildContext context,
                                   SearchController controller) {
-                                return List<Widget>.generate(
-                                    publicationTitles.length, (int index) {
-                                  final String title = publicationTitles[index];
-                                  return ListTile(
-                                    title: Text(title),
-                                    onTap: () {
-                                      setState(() {
-                                        controller.closeView(title);
-                                      });
-                                    },
-                                  );
-                                });
+                                return Future.value(
+                                  ListView(
+                                    children: publicationTitles.map((title) {
+                                      return ListTile(
+                                        title: Text(title),
+                                        onTap: () {
+                                          _searchController.text = title;
+                                          controller.closeView(title);
+                                        },
+                                      );
+                                    }).toList(),
+                                  ) as FutureOr<Iterable<Widget>>?,
+                                );
                               },
+                              viewLeading: SizedBox(
+                                height: 15,
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 15,
                           ),
                         ],
                       ),
@@ -200,24 +216,34 @@ class _JournalPageState extends State<JournalPage> {
                 Container(
                   width: 350,
                   child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: publicationTitles.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return MyPublications(
-                          publicationTitles[index], publicationTexts[index],
-                          () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CreateJournalPost(
-                                      title: publicationTitles[index],
-                                      text: publicationTexts[index],
-                                    )));
-                      });
-                      // Navigate to EditJournalScreen with publication details
-                    },
-                  ),
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: publicationTitles.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        // Check if the title matches the query from the beginning
+                        bool matchesSearch = publicationTitles[index]
+                            .toLowerCase()
+                            .startsWith(_searchQuery.toLowerCase());
+
+                        return matchesSearch
+                            ? MyPublications(
+                                formatTitle(
+                                    publicationTitles[index], _searchQuery),
+                                publicationTexts[index],
+                                () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CreateJournalPost(
+                                        title: publicationTitles[index],
+                                        text: publicationTexts[index],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              )
+                            : Container();
+                      }),
                 ),
               ],
             ),
@@ -245,6 +271,8 @@ class _JournalPageState extends State<JournalPage> {
                   color: Colors.white,
                 ),
               ),
+              onTap: () => Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => MainMenuScreen())),
             ),
             SizedBox(
               height: 30,
@@ -261,6 +289,8 @@ class _JournalPageState extends State<JournalPage> {
                   color: Colors.white,
                 ),
               ),
+              onTap: () => Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => ProfilePage())),
             ),
             SizedBox(
               height: 30,
@@ -292,6 +322,8 @@ class _JournalPageState extends State<JournalPage> {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
+              onTap: () => Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => JournalPage())),
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height - 430,
@@ -316,13 +348,64 @@ class _JournalPageState extends State<JournalPage> {
   }
 }
 
+Widget formatTitle(String title, String query) {
+  // Index of the matching part of the title, -1 if not found
+  int index = title.toLowerCase().indexOf(query.toLowerCase());
+
+  if (index != -1) {
+    // Matching part of the title
+    String matchingPart = title.substring(index, index + query.length);
+    // Before and after parts of the title
+    String beforePart = title.substring(0, index);
+    String afterPart = title.substring(index + query.length);
+
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: beforePart,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          TextSpan(
+            text: matchingPart,
+            style: TextStyle(
+              backgroundColor: Colors.grey,
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          TextSpan(
+            text: afterPart,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  } else {
+    // If no match found, simply display the title
+    return Text(
+      title,
+      style: TextStyle(color: Colors.white),
+    );
+  }
+}
+
 void showInSnackBar(BuildContext context, String value) {
   var snackBar = SnackBar(content: Text(value));
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
 GestureDetector MyPublications(
-    String title, String text, GestureTapCallback onTap) {
+    Widget title, String text, GestureTapCallback onTap) {
   DateTime now = DateTime.now();
   String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
   return GestureDetector(
@@ -337,26 +420,16 @@ GestureDetector MyPublications(
       width: 350,
       child: Stack(
         children: [
-          // Image
-
-          // Title and content
           Positioned(
             top: 10,
             left: 10,
-            // Adjust this value to position the title next to the image
             child: Container(
               width: 350,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  // Display the title widget directly
+                  title,
                 ],
               ),
             ),
