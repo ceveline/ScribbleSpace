@@ -129,6 +129,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               context,
                               MaterialPageRoute(builder: (context) => RegistrationScreen()),
                             );
+                            _emailController.clear();
+                            _passwordController.clear();
                           },
                           child: Text(
                             'Don\'t have an account? Register now!',

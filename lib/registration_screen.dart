@@ -44,33 +44,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   SizedBox(
                     height: 40,
                   ),
-                  //username
-                  // Container(
-                  //   padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
-                  //   child: Text(
-                  //     "Username:",
-                  //     style: TextStyle(fontSize: 20, color: Colors.white,
-                  //         fontWeight: FontWeight.bold),
-                  //   ),
-                  // ),
-                  // Container(
-                  //   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  //   width: 340,
-                  //   height: 70,
-                  //   child: TextField(
-                  //     controller: _usernameController,
-                  //     decoration: InputDecoration(
-                  //       enabledBorder: OutlineInputBorder(
-                  //           borderRadius: BorderRadius.circular(25.0),
-                  //           borderSide: BorderSide(color: Colors.transparent)),
-                  //       filled: true,
-                  //       hintStyle: TextStyle(color: Colors.grey),
-                  //       hintText: "jondoe123",
-                  //       fillColor: Colors.white70,
-                  //     ),
-                  //   ),
-                  // ),
-
                   //email
                   Container(
                     padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
@@ -168,6 +141,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   .then((value) {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) => LoginScreen()));
+                                _emailController.clear();
+                                _passwordController.clear();
+                                _repasswordController.clear();
                               }).onError((error, stackTrace) {
                                 print("Error ${error.toString()}");
                               });

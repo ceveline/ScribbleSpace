@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:scribblespace/create_post_screen.dart';
+import 'package:scribblespace/login_screen.dart';
 import 'color_constants.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MainMenuScreen extends StatelessWidget {
   final String? email;
@@ -163,7 +165,11 @@ class MainMenuScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
-              // onTap: ,
+              onTap: (){
+                FirebaseAuth.instance.signOut();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+
+              },
             ),
           ],
         ),
