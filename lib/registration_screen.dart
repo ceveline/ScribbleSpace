@@ -11,9 +11,9 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _repasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -45,31 +45,31 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     height: 40,
                   ),
                   //username
-                  Container(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
-                    child: Text(
-                      "Username:",
-                      style: TextStyle(fontSize: 20, color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                    width: 340,
-                    height: 70,
-                    child: TextField(
-                      controller: _usernameController,
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(color: Colors.transparent)),
-                        filled: true,
-                        hintStyle: TextStyle(color: Colors.grey),
-                        hintText: "jondoe123",
-                        fillColor: Colors.white70,
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
+                  //   child: Text(
+                  //     "Username:",
+                  //     style: TextStyle(fontSize: 20, color: Colors.white,
+                  //         fontWeight: FontWeight.bold),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  //   width: 340,
+                  //   height: 70,
+                  //   child: TextField(
+                  //     controller: _usernameController,
+                  //     decoration: InputDecoration(
+                  //       enabledBorder: OutlineInputBorder(
+                  //           borderRadius: BorderRadius.circular(25.0),
+                  //           borderSide: BorderSide(color: Colors.transparent)),
+                  //       filled: true,
+                  //       hintStyle: TextStyle(color: Colors.grey),
+                  //       hintText: "jondoe123",
+                  //       fillColor: Colors.white70,
+                  //     ),
+                  //   ),
+                  // ),
 
                   //email
                   Container(
@@ -126,6 +126,34 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                   ),
 
+                  // Re-type Password
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
+                    child: Text(
+                      "Re-type password:",
+                      style: TextStyle(fontSize: 20, color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    width: 340,
+                    height: 70,
+                    child: TextField(
+                      obscureText: true,
+                      controller: _repasswordController,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(color: Colors.transparent)),
+                        filled: true,
+                        hintStyle: TextStyle(color: Colors.grey),
+                        hintText: "••••••••",
+                        fillColor: Colors.white70,
+                      ),
+                    ),
+                  ),
+
                   //login button
                   Center(
                       child: Container(
@@ -133,18 +161,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: ElevatedButton(
                           onPressed: () {
-                            FirebaseAuth.instance.createUserWithEmailAndPassword(
-                                email: _emailController.text,
-                                password: _passwordController.text)
-                                .then((value) {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => LoginScreen()));
-                            }).onError((error, stackTrace) {
-                              print("Error ${error.toString()}");
-                            });
+                            if (_repasswordController.text == _passwordController.text) {
+                              FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                  email: _emailController.text,
+                                  password: _passwordController.text)
+                                  .then((value) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => LoginScreen()));
+                              }).onError((error, stackTrace) {
+                                print("Error ${error.toString()}");
+                              });
+                            }
+                            else {
+                              showAlertDialog(context);
+                              return;
+                            }
                           },
                           child: Text(
-                            'Login',
+                            'Register',
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold,
                                 color: ColorConstants.purple),
@@ -160,6 +194,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed:  () {
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Error"),
+      content: Text("Passwords don't match"),
+      actions: [
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
