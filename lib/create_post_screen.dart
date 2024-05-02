@@ -171,7 +171,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                               ValueItem(label: 'Travel', value: 'Travel'),
                               ValueItem(label: 'Pets & Animals', value: 'Pets & Animals'),
                             ],
-                            maxItems: null,
+                            maxItems: 2,
                             selectionType: SelectionType.multi,
                             chipConfig: const ChipConfig(wrapType: WrapType.wrap),
                             dropdownHeight: 300,
@@ -215,15 +215,18 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                             var storageRef = FirebaseStorage.instance.ref().child('images/$imageName.jpg');
                             var uploadTask = storageRef.putFile(_image!);
                             var downloadUrl = await (await uploadTask).ref.getDownloadURL();
+                            var category1 = selectedItems.isNotEmpty ? selectedItems[0] : 'none';
+                            var category2 = selectedItems.length > 1 ? selectedItems[1] : 'none';
 
                             firestore.collection("publications").add({
                               "Title": _title.text,
                               "Text": _text.text,
                               "User": FirebaseAuth.instance.currentUser?.email.toString(),
-                              "Categories": selectedItems.toString(),
-                              // Add image reference to document
+                              "Category-1": category1,
+                              "Category-2": category2,
                               "Image": downloadUrl.toString()
                             });
+
                             Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen(email: FirebaseAuth.instance.currentUser?.email.toString())));
                             _title.clear();
                             _text.clear();

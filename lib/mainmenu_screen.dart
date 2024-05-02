@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scribblespace/create_post_screen.dart';
 import 'package:scribblespace/login_screen.dart';
+import 'package:scribblespace/publication_page.dart';
 import 'color_constants.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -241,8 +242,8 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Food',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -289,8 +290,8 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Health & Wellness',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),
