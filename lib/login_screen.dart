@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'color_constants.dart';
 import 'registration_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,7 +11,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -38,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Container(
                     padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
                     child: Text(
-                      "Username:",
+                      "Email:",
                       style: TextStyle(fontSize: 20, color: Colors.white,
                           fontWeight: FontWeight.bold),
                     ),
@@ -48,14 +49,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 340,
                     height: 70,
                     child: TextField(
-                      controller: _usernameController,
+                      controller: _emailController,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
                             borderSide: BorderSide(color: Colors.transparent)),
                         filled: true,
                         hintStyle: TextStyle(color: Colors.grey),
-                        hintText: "jondoe123",
+                        hintText: "jondoe123@gmail.com",
                         fillColor: Colors.white70,
                       ),
                     ),
@@ -95,7 +96,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 200,
                     padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        FirebaseAuth.instance.signInWithEmailAndPassword(
+                            email: _emailController.text,
+                            password: _passwordController.text).then((value){
+                          print('Signing in');
+                        }).onError((error, stackTrace){
+                          print('Error: ${error.toString()}');
+                        });
+                      },
                       child: Text(
                         'Login',
                         style: TextStyle(
