@@ -4,7 +4,9 @@ import 'color_constants.dart';
 import 'package:intl/intl.dart';
 
 class MainMenuScreen extends StatelessWidget {
-  const MainMenuScreen({super.key});
+  final String? email;
+
+  const MainMenuScreen({this.email});
 
   Container _buildContainer(Icon icon, String title, double screenSize) {
     return Container(
@@ -71,7 +73,7 @@ class MainMenuScreen extends StatelessWidget {
       appBar: AppBar(
         //use an api for time of the day, create a method for it
         title: Text(
-          'Hello, jondoe!\n${_greetingMessage()}',
+          'Hello, ${email?.substring(0, email?.indexOf('@'))}!\n${_greetingMessage()}',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: ColorConstants.darkblue,

@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           print('Error: ${error.toString()}');
                         });
 
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen(email: _emailController.text,)));
                       },
                       child: Text(
                         'Login',
