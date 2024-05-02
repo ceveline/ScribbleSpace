@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scribblespace/mainmenu_screen.dart';
 import 'color_constants.dart';
 import 'registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -104,6 +105,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         }).onError((error, stackTrace){
                           print('Error: ${error.toString()}');
                         });
+
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen()));
                       },
                       child: Text(
                         'Login',

@@ -171,6 +171,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               }).onError((error, stackTrace) {
                                 print("Error ${error.toString()}");
                               });
+
+                              var snackBar = SnackBar(content: Text('Account has been created. Please sign in!'));
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
                             }
                             else {
                               showAlertDialog(context);
