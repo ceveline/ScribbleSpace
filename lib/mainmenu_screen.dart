@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:scribblespace/create_post_screen.dart';
+import 'package:scribblespace/login_screen.dart';
+import 'package:scribblespace/publication_page.dart';
 import 'color_constants.dart';
 import 'package:intl/intl.dart';
-import 'journal_page.dart';
-import 'profile_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MainMenuScreen extends StatelessWidget {
-  const MainMenuScreen({super.key});
+  final String? email;
+
+  const MainMenuScreen({this.email});
 
   Container _buildContainer(Icon icon, String title, double screenSize) {
     return Container(
@@ -73,7 +76,7 @@ class MainMenuScreen extends StatelessWidget {
       appBar: AppBar(
         //use an api for time of the day, create a method for it
         title: Text(
-          'Hello, jondoe!\n${_greetingMessage()}',
+          'Hello, ${email?.substring(0, email?.indexOf('@'))}!\n${_greetingMessage()}',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: ColorConstants.darkblue,
@@ -101,10 +104,6 @@ class MainMenuScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              onTap: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MainMenuScreen())),
             ),
             SizedBox(
               height: 30,
@@ -121,11 +120,6 @@ class MainMenuScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              onTap: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ProfilePage())),
-
             ),
             SizedBox(
               height: 30,
@@ -149,7 +143,7 @@ class MainMenuScreen extends StatelessWidget {
             //journal
             ListTile(
               leading:
-              Icon(Icons.menu_book_rounded, size: 40, color: Colors.white),
+                  Icon(Icons.menu_book_rounded, size: 40, color: Colors.white),
               title: Text(
                 'Journal',
                 style: TextStyle(
@@ -157,11 +151,6 @@ class MainMenuScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
-              onTap: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => JournalPage())),
-
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height - 430,
@@ -177,7 +166,11 @@ class MainMenuScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
-              // onTap: ,
+              onTap: (){
+                FirebaseAuth.instance.signOut();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+
+              },
             ),
           ],
         ),
@@ -249,8 +242,8 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Food',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -297,8 +290,8 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Health & Wellness',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),
