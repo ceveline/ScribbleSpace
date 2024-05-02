@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scribblespace/login_screen.dart';
 import 'color_constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -131,7 +132,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         width: 200,
                         padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                email: _emailController.text,
+                                password: _passwordController.text)
+                                .then((value) {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                            }).onError((error, stackTrace) {
+                              print("Error ${error.toString()}");
+                            });
+                          },
                           child: Text(
                             'Login',
                             style: TextStyle(
