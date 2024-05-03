@@ -7,9 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class MainMenuScreen extends StatelessWidget {
-  final String? email;
 
-  const MainMenuScreen({this.email});
+  const MainMenuScreen({super.key});
 
   Container _buildContainer(Icon icon, String title, double screenSize) {
     return Container(
@@ -42,6 +41,7 @@ class MainMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final timeFormatter = DateFormat('HH:mm:ss');
+    final email = FirebaseAuth.instance.currentUser?.email.toString();
 
     String _greetingMessage() {
       final DateTime now = DateTime.now();
