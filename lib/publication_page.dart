@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:scribblespace/individual_publication_page.dart';
 import 'color_constants.dart';
 import 'mainmenu_screen.dart';
 
@@ -35,16 +36,23 @@ class _PublicationPageState extends State<PublicationPage> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   var filteredDocs = snapshot.data!.docs.where((doc) {
-                    var data = doc.data() as Map<String, dynamic>;
+                    var data = doc.data();
                     return data['Category-1'] == widget.category || data['Category-2'] == widget.category;
                   }).toList();
 
                   return ListView.builder(
                     itemCount: filteredDocs.length,
                     itemBuilder: (context, index) {
-                      var post = filteredDocs[index].data() as Map<String, dynamic>;
+                      var post = filteredDocs[index].data();
                       return GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context)
+                              => IndividualPubPage(title: post['Title'],
+                                text: post['Text'], image: post['Image'], user: post['User'],
+                                category1: post['Category-1'], category2: post['Category-2'],
+                              )));
+                        },
                         child: Container(
                           padding: EdgeInsets.all(15),
                           margin: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
