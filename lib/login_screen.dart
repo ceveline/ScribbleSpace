@@ -100,13 +100,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         FirebaseAuth.instance.signInWithEmailAndPassword(
                             email: _emailController.text,
-                            password: _passwordController.text).then((value){
+                            password: _passwordController.text
+                        ).then((value) {
+                          // If authentication is successful, navigate to MainMenuScreen
                           print('Signing in');
-                        }).onError((error, stackTrace){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen(email: _emailController.text)));
+                        }).catchError((error) {
+                          // If authentication fails, show an error message
                           print('Error: ${error.toString()}');
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Authentication failed. Please check your email and password.')));
                         });
-
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen(email: _emailController.text,)));
                       },
                       child: Text(
                         'Login',
