@@ -27,6 +27,7 @@ class _IndividualPubPageState extends State<IndividualPubPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorConstants.darkblue,
       appBar: AppBar(
         backgroundColor: ColorConstants.darkblue,
         leading: IconButton(
@@ -82,6 +83,19 @@ class _IndividualPubPageState extends State<IndividualPubPage> {
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   fontSize: 18,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
+              padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
+              color: Colors.white.withOpacity(0.2),
+              child: Text(
+                'Published by ${widget.user.toString()}',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 14,
                   color: Colors.white,
                 ),
               ),
