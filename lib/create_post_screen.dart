@@ -227,7 +227,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                               "Image": downloadUrl.toString()
                             });
 
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen(email: FirebaseAuth.instance.currentUser?.email.toString())));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen()));
                             _title.clear();
                             _text.clear();
                             selectedItems.clear();

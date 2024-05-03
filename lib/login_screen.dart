@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ).then((value) {
                           // If authentication is successful, navigate to MainMenuScreen
                           print('Signing in');
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen(email: _emailController.text)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen()));
                         }).catchError((error) {
                           // If authentication fails, show an error message
                           print('Error: ${error.toString()}');
