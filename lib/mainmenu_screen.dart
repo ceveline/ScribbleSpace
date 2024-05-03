@@ -41,7 +41,7 @@ class MainMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final timeFormatter = DateFormat('HH:mm:ss');
-    final String? email = FirebaseAuth.instance.currentUser?.email.toString();
+    final email = FirebaseAuth.instance.currentUser?.email.toString();
 
     String _greetingMessage() {
       final DateTime now = DateTime.now();
@@ -242,7 +242,56 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Entertainment',)));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      height: 120,
+                      width: MediaQuery.of(context).size.width - 25,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: ColorConstants.darkblue,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.4),
+                              // Shadow color
+                              spreadRadius: 2,
+                              // Spread radius
+                              blurRadius: 5,
+                              // Blur radius
+                              offset: Offset(0, 3),
+                            )
+                          ]
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.movie,
+                            size: 50,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 30),
+                          Text(
+                            'Entertainment',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 28,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Food',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -337,8 +386,8 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Sports',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -385,8 +434,8 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Technology',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -433,8 +482,8 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Travel',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -481,8 +530,8 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Pets & Animals',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),

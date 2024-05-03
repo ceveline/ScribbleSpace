@@ -165,6 +165,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                             },
                             options: const <ValueItem>[
                               ValueItem(label: 'Food', value: 'Food'),
+                              ValueItem(label: 'Entertainment', value: 'Entertainment'),
                               ValueItem(label: 'Health & Wellness', value: 'Health & Wellness'),
                               ValueItem(label: 'Sports', value: 'Sports'),
                               ValueItem(label: 'Technology', value: 'Technology'),
