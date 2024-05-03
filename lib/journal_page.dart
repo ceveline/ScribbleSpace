@@ -1,12 +1,13 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'color_constants.dart';
 import 'package:intl/intl.dart';
 import 'create_journal.dart';
-import 'edit_journal.dart';
 import 'journal_post.dart';
 import 'profile_page.dart';
 import 'mainmenu_screen.dart';
@@ -18,22 +19,43 @@ class JournalPage extends StatefulWidget {
 }
 
 class _JournalPageState extends State<JournalPage> {
+  late User user; // Declare user as late to initialize it in initState()
+  late String email; // Declare email as late
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize user and email in initState()
+    user = FirebaseAuth.instance.currentUser!;
+    email = user.email ?? "";
+    fetchJournal();
+  }
   TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
   // Dummy code this will be retrieved from firebase
-  List<String> publicationTitles = [
-    "Publication 1",
-    "Publication 2",
-    "Publication 3",
-    "Journal 1"
-  ];
-  List<String> publicationTexts = [
-    "Hello my name is Trevor",
-    "Goodbye",
-    "The Beatles were once my favourite band",
-    "This is my journal entry",
-  ];
+  List<String> publicationTitles = [];
+  List<String> publicationTexts = [];
+
+  void fetchJournal() async {
+    // Query Firestore for publications
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('journals')
+        .where('User', isEqualTo: email)
+        .get();
+
+    // Extract publication data from snapshot and populate lists
+    snapshot.docs.forEach((doc) {
+      var data = doc.data();
+      publicationTitles.add(data['Title']);
+      publicationTexts.add(data['Text']);
+    });
+    // Update UI after fetching data
+    setState(() {});
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +122,7 @@ class _JournalPageState extends State<JournalPage> {
                             SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                'Trevor Obodoechina',
+                                '${email?.substring(0, email?.indexOf('@'))}',
                                 style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
@@ -169,6 +191,7 @@ class _JournalPageState extends State<JournalPage> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               CreateJournalPost(
+                                                user: user,
                                             title: publicationTitles[index],
                                             text: publicationTexts[index],
                                           ),
@@ -221,27 +244,14 @@ class _JournalPageState extends State<JournalPage> {
                       itemCount: publicationTitles.length,
                       itemBuilder: (BuildContext context, int index) {
                         // Check if the title matches the query from the beginning
-                        bool matchesSearch = publicationTitles[index]
-                            .toLowerCase()
-                            .startsWith(_searchQuery.toLowerCase());
+                        bool matchesSearch = publicationTitles[index].toLowerCase().startsWith(_searchQuery.toLowerCase());
 
                         return matchesSearch
-                            ? MyPublications(
-                                formatTitle(
-                                    publicationTitles[index], _searchQuery),
-                                publicationTexts[index],
-                                () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CreateJournalPost(
-                                        title: publicationTitles[index],
-                                        text: publicationTexts[index],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              )
+                            ? JournalWidget(
+                          user: user,
+                          title: publicationTitles[index], // Format the title
+                          text: publicationTexts[index], // Use the corresponding text
+                        )
                             : Container();
                       }),
                 ),
@@ -345,7 +355,9 @@ class _JournalPageState extends State<JournalPage> {
         ),
       ),
     );
+
   }
+
 }
 
 Widget formatTitle(String title, String query) {
@@ -404,48 +416,129 @@ void showInSnackBar(BuildContext context, String value) {
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
-GestureDetector MyPublications(
-    Widget title, String text, GestureTapCallback onTap) {
-  DateTime now = DateTime.now();
-  String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
-  return GestureDetector(
-    onTap: onTap,
-    child: Container(
-      margin: const EdgeInsets.only(bottom: 15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(25.0),
-      ),
-      height: 120,
-      width: 350,
-      child: Stack(
-        children: [
-          Positioned(
-            top: 10,
-            left: 10,
-            child: Container(
-              width: 350,
+// GestureDetector MyPublications(
+//     Widget title, String text, GestureTapCallback onTap) {
+//   DateTime now = DateTime.now();
+//   String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
+//   return GestureDetector(
+//     onTap: onTap,
+//     child: Container(
+//       margin: const EdgeInsets.only(bottom: 15),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(25.0),
+//       ),
+//       height: 120,
+//       width: 350,
+//       child: Stack(
+//         children: [
+//           Positioned(
+//             top: 10,
+//             left: 10,
+//             child: Container(
+//               width: 350,
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   // Display the title widget directly
+//                   title,
+//                 ],
+//               ),
+//             ),
+//           ),
+//           Positioned(
+//             bottom: 10,
+//             right: 10,
+//             child: Text(
+//               '${formattedDate}',
+//               style: TextStyle(
+//                 fontSize: 15,
+//               ),
+//             ),
+//           )
+//         ],
+//       ),
+//     ),
+//   );
+// }
+class JournalWidget extends StatelessWidget {
+  final User user;
+  final String title;
+  final String text;
+  final String? query;
+
+  JournalWidget({
+    required this.user,
+    required this.title,
+    required this.text,
+    this.query,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CreateJournalPost(
+              title: title,
+              text: text,
+              user: user,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.all(15),
+        margin: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.4),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            )
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Display the title widget directly
-                  title,
+                  if (query != null) // Check if query is not null
+                    formatTitle(title, query!), // Use the formatted title here
+                  SizedBox(height: 5),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  Text(
+                    "${(text.length > 100) ? text.toString().substring(0, 90) : text.toString()}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                 ],
               ),
             ),
-          ),
-          Positioned(
-            bottom: 10,
-            right: 10,
-            child: Text(
-              '${formattedDate}',
-              style: TextStyle(
-                fontSize: 15,
-              ),
-            ),
-          )
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

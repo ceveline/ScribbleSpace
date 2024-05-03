@@ -21,7 +21,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       backgroundColor: ColorConstants.purple,
       appBar: AppBar(
         title: Text('Create Account', style: TextStyle(
-          color: Colors.white, fontSize: 27, fontWeight: FontWeight.bold
+            color: Colors.white, fontSize: 27, fontWeight: FontWeight.bold
         ),),
         backgroundColor: ColorConstants.darkblue,
         toolbarHeight: 80,
@@ -30,7 +30,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             context,
             MaterialPageRoute(builder: (context) => LoginScreen()),
           );
-        }, 
+        },
           icon: Icon(Icons.arrow_back_ios), color: Colors.white,),
       ),
       body: SingleChildScrollView(
@@ -145,7 +145,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 _passwordController.clear();
                                 _repasswordController.clear();
                               }).onError((error, stackTrace) {
-                                print("Error ${error.toString()}");
+                                print("Error  ${error.toString()}");
                               });
 
                               var snackBar = SnackBar(content: Text('Account has been created. Please sign in!'));
@@ -166,7 +166,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               backgroundColor: ColorConstants.darkblue),
                         ),
                       )),
-                  
+
                 ],
               ),
             ),
@@ -177,7 +177,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   showAlertDialog(BuildContext context) {
-    
+
     Widget continueButton = TextButton(
       child: Text("Continue"),
       onPressed:  () {

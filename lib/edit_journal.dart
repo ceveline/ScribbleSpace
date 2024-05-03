@@ -4,18 +4,22 @@ import 'package:flutter/widgets.dart';
 import 'package:scribblespace/journal_page.dart';
 import 'color_constants.dart';
 import 'journal_post.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EditJournalScreen extends StatefulWidget {
-  final String title, text;
-  final TextEditingController? titleController;
-  final TextEditingController? textController;
+  final User user;
+  final String title;
+  final String text;
+  final String documentId; // Add document ID parameter
 
   EditJournalScreen({
+    required this.user,
     required this.title,
     required this.text,
-    this.titleController,
-    this.textController,
+    required this.documentId, // Initialize document ID
   });
+
   @override
   State<StatefulWidget> createState() => _EditJournalScreenState();
 }
@@ -24,22 +28,23 @@ class _EditJournalScreenState extends State<EditJournalScreen> {
   late TextEditingController _titleController;
   late TextEditingController _textController;
 
- @override
+
+  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _titleController = widget.titleController ?? TextEditingController(text: widget.title);
-    _textController = widget.textController ?? TextEditingController(text: widget.text);
- }
+    _titleController = TextEditingController(text: widget.title);
+    _textController = TextEditingController(text: widget.text);
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
     _textController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: ColorConstants.purple,
       appBar: AppBar(
@@ -54,7 +59,13 @@ class _EditJournalScreenState extends State<EditJournalScreen> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => CreateJournalPost(title: "${ _titleController.text}", text:"${ _textController.text}")),
+              MaterialPageRoute(
+                builder: (context) => CreateJournalPost(
+                  user: widget.user,
+                  title: _titleController.text,
+                  text: _textController.text,
+                ),
+              ),
             );
           },
           icon: Icon(
@@ -81,7 +92,6 @@ class _EditJournalScreenState extends State<EditJournalScreen> {
                 maxLines: 2,
                 onChanged: (val) {
                   // Update the title text
-                  // You can add any additional logic here if needed
                 },
                 style: TextStyle(fontSize: 20),
               ),
@@ -96,7 +106,6 @@ class _EditJournalScreenState extends State<EditJournalScreen> {
                 style: TextStyle(fontSize: 20),
                 onChanged: (val) {
                   // Update the text
-                  // You can add any additional logic here if needed
                 },
               ),
               Center(
@@ -114,9 +123,43 @@ class _EditJournalScreenState extends State<EditJournalScreen> {
                           color: Colors.white,
                         ),
                         child: TextButton(
-                          onPressed: () {
-                            //Simulate updating database
+                          onPressed: () async {
+                            if (_titleController.text.isNotEmpty) {
+                              try {
+                                // Get the document reference for the current user's journal entry
+                                DocumentReference<Map<String, dynamic>> docRef =
+                                FirebaseFirestore.instance
+                                    .collection('journals')
+                                    .doc(widget.documentId);
 
+                                // Update the 'Text' field of the document
+                                await docRef.update({
+                                  'Title': _titleController.text,
+                                });
+
+                                print("Journal entry updated successfully");
+                              } catch (error) {
+                                print("Failed to update journal entry: $error");
+                              }
+                            }
+                            if (_textController.text.isNotEmpty) {
+                              try {
+                                // Get the document reference for the current user's journal entry
+                                DocumentReference<Map<String, dynamic>> docRef =
+                                FirebaseFirestore.instance
+                                    .collection('journals')
+                                    .doc(widget.documentId);
+
+                                // Update the 'Text' field of the document
+                                await docRef.update({
+                                  'Text': _textController.text
+                                });
+
+                                print("Journal entry updated successfully");
+                              } catch (error) {
+                                print("Failed to update journal entry: $error");
+                              }
+                            }
                           },
                           child: Text(
                             'Update',
@@ -128,7 +171,7 @@ class _EditJournalScreenState extends State<EditJournalScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20,),
+                      SizedBox(height: 20),
                       Container(
                         width: 150,
                         decoration: BoxDecoration(

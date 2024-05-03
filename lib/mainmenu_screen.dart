@@ -5,6 +5,8 @@ import 'package:scribblespace/publication_page.dart';
 import 'color_constants.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'journal_page.dart';
+import 'profile_page.dart';
 
 class MainMenuScreen extends StatelessWidget {
 
@@ -104,6 +106,10 @@ class MainMenuScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
+              onTap: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MainMenuScreen())),
             ),
             SizedBox(
               height: 30,
@@ -120,6 +126,11 @@ class MainMenuScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
+              onTap: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProfilePage())),
+
             ),
             SizedBox(
               height: 30,
@@ -143,7 +154,7 @@ class MainMenuScreen extends StatelessWidget {
             //journal
             ListTile(
               leading:
-                  Icon(Icons.menu_book_rounded, size: 40, color: Colors.white),
+              Icon(Icons.menu_book_rounded, size: 40, color: Colors.white),
               title: Text(
                 'Journal',
                 style: TextStyle(
@@ -151,6 +162,11 @@ class MainMenuScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
+              onTap: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => JournalPage())),
+
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height - 430,
