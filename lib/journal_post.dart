@@ -12,16 +12,14 @@ class CreateJournalPost extends StatefulWidget {
   final String title;
   final String text;
   final String? id;
-  final TextEditingController? titleController;
-  final TextEditingController? textController;
+
 
   CreateJournalPost({
     required this.user,
     required this.title,
     required this.text,
     this.id,
-    this.titleController,
-    this.textController,
+
   });
 
   @override
@@ -29,17 +27,11 @@ class CreateJournalPost extends StatefulWidget {
 }
 
 class _CreateJournalState extends State<CreateJournalPost> {
-  late TextEditingController _titleController;
-  late TextEditingController _textController;
   String? date;
 
   @override
   void initState() {
     super.initState();
-    _titleController =
-        widget.titleController ?? TextEditingController(text: widget.title);
-    _textController =
-        widget.textController ?? TextEditingController(text: widget.text);
     fetchDate().then((value) {
       setState(() {
         date = value;
@@ -67,8 +59,6 @@ class _CreateJournalState extends State<CreateJournalPost> {
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _textController.dispose();
     super.dispose();
   }
 
@@ -101,8 +91,8 @@ class _CreateJournalState extends State<CreateJournalPost> {
                       builder: (context) => EditJournalScreen(
                           documentId: widget.id!,
                           user: widget.user,
-                          title: "${_titleController.text}",
-                          text: "${_textController.text}")));
+                          title: "${widget.title}",
+                          text: "${widget.text}")));
             },
             icon: Icon(Icons.edit, color: Colors.white),
           ),
@@ -178,7 +168,7 @@ class _CreateJournalState extends State<CreateJournalPost> {
               padding: EdgeInsets.all(16),
               child: Container(
                 child: Text(
-                  '${_textController.text}',
+                  '${widget.text}',
                   textAlign: TextAlign.justify,
                   style: TextStyle(
                     fontSize: 18,

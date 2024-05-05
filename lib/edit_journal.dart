@@ -63,8 +63,8 @@ class _EditJournalScreenState extends State<EditJournalScreen> {
               MaterialPageRoute(
                 builder: (context) => CreateJournalPost(
                   user: widget.user,
-                  title: _titleController.text,
-                  text: _textController.text,
+                  title: widget.title,
+                  text: widget.text,
                   id: widget.documentId,
                 ),
               ),
@@ -161,7 +161,7 @@ class _EditJournalScreenState extends State<EditJournalScreen> {
                                 print("Failed to update journal entry: $error");
                               }
                             }
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournalPost(user: widget.user, title: widget.title, text: widget.text, id: widget.documentId)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournalPost(user: widget.user, title: _titleController.text, text: _textController.text, id: widget.documentId)));
                           },
                           child: Text(
                             'Update',
