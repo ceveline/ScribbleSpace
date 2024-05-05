@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -64,6 +65,7 @@ class _EditJournalScreenState extends State<EditJournalScreen> {
                   user: widget.user,
                   title: _titleController.text,
                   text: _textController.text,
+                  id: widget.documentId,
                 ),
               ),
             );
@@ -154,12 +156,12 @@ class _EditJournalScreenState extends State<EditJournalScreen> {
                                 await docRef.update({
                                   'Text': _textController.text
                                 });
-
                                 print("Journal entry updated successfully");
                               } catch (error) {
                                 print("Failed to update journal entry: $error");
                               }
                             }
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournalPost(user: widget.user, title: widget.title, text: widget.text, id: widget.documentId)));
                           },
                           child: Text(
                             'Update',
@@ -179,8 +181,14 @@ class _EditJournalScreenState extends State<EditJournalScreen> {
                           color: ColorConstants.darkblue,
                         ),
                         child: TextButton(
-                          onPressed: () {
-                            // Handle delete button press
+                          onPressed: () async {
+                            DocumentReference<Map<String, dynamic>> docRef =
+                            FirebaseFirestore.instance
+                                .collection('journals')
+                                .doc(widget.documentId);
+
+                            await docRef.delete();
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => JournalPage()));
                           },
                           child: Text(
                             'Delete',

@@ -11,6 +11,7 @@ class CreateJournalPost extends StatefulWidget {
   final User user;
   final String title;
   final String text;
+  final String? id;
   final TextEditingController? titleController;
   final TextEditingController? textController;
 
@@ -18,6 +19,7 @@ class CreateJournalPost extends StatefulWidget {
     required this.user,
     required this.title,
     required this.text,
+    this.id,
     this.titleController,
     this.textController,
   });
@@ -29,21 +31,8 @@ class CreateJournalPost extends StatefulWidget {
 class _CreateJournalState extends State<CreateJournalPost> {
   late TextEditingController _titleController;
   late TextEditingController _textController;
-  var data;
-  String documentId = '';
-  void fetchJournal() async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-        .instance
-        .collection('journals')
-        .where('User', isEqualTo: widget.user.email)
-        .get();
+  String? date;
 
-    // Extract publication data from snapshot and populate lists
-    snapshot.docs.forEach((doc) {
-      data = doc.data();
-       documentId = doc.id; // Retrieve the document ID
-    });
-  }
   @override
   void initState() {
     super.initState();
@@ -51,7 +40,28 @@ class _CreateJournalState extends State<CreateJournalPost> {
         widget.titleController ?? TextEditingController(text: widget.title);
     _textController =
         widget.textController ?? TextEditingController(text: widget.text);
+      fetchDate().then((value) {
+        setState(() {
+          date = value;
+        });
+      });
+    }
+
+  Future<String?> fetchDate() async {
+    if (widget.id != null) {
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+      await FirebaseFirestore.instance.collection('journals').doc(widget.id!).get();
+      if (snapshot.exists) {
+        // Check if the 'Date' field exists and return it if it does
+        if (snapshot.data() != null && snapshot.data()!.containsKey('Date')) {
+          return snapshot.data()?['Date'];
+        }
+      }
+    }
+    // Return null if document doesn't exist or 'Date' field is not present
+    return null;
   }
+
 
   @override
   void dispose() {
@@ -63,7 +73,7 @@ class _CreateJournalState extends State<CreateJournalPost> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          backgroundColor: ColorConstants.purple,
+          backgroundColor: ColorConstants.darkblue,
           appBar: AppBar(
             title: Text(
               '${_titleController.text}',
@@ -90,14 +100,42 @@ class _CreateJournalState extends State<CreateJournalPost> {
                 iconSize: 30,
                 onPressed: () {
                   Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => EditJournalScreen(documentId: documentId, user: widget.user,  title: "${ _titleController.text}", text:"${ _textController.text}"))
+                      MaterialPageRoute(builder: (context) => EditJournalScreen(documentId: widget.id!, user: widget.user,  title: "${ _titleController.text}", text:"${ _textController.text}"))
                   );},
                 icon: Icon(Icons.edit, color: Colors.white),
               ),
               IconButton(
                 iconSize: 30,
                 onPressed: () {
-                  // Add logic for delete/garbage action
+                  showDialog(context: context, builder: (BuildContext context) {
+                    // set up the buttons
+                    Widget cancelButton = TextButton(
+                      child: Text("Cancel"),
+                      onPressed:  () {
+                        Navigator.of(context, rootNavigator: true).pop();
+                      },
+                    );
+                    Widget deleteButton = TextButton(
+                      child: Text("Delete"),
+                      onPressed:  () async {
+                        DocumentReference<Map<String, dynamic>> docRef =
+                        FirebaseFirestore.instance
+                            .collection('journals')
+                            .doc(widget.id);
+
+                        await docRef.delete();
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => JournalPage()));
+                      },
+                    );
+                    return AlertDialog(
+                      title: Text('Delete Journal'),
+                      content: Text('Are you sure you want to delete this journal entry?'),
+                      actions: [
+                        cancelButton,
+                        deleteButton,
+                      ],
+                    );
+                  });
                 },
                 icon: Icon(Icons.delete, color: Colors.red),
               ),
@@ -112,12 +150,25 @@ class _CreateJournalState extends State<CreateJournalPost> {
             child: Text(
               '${_textController.text}',
               style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
                   color: Colors.white,
                   fontWeight: FontWeight.bold),
             ),
           ),
         ),
+            Container(
+              margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
+              padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
+              color: Colors.white.withOpacity(0.2),
+              child: Text(
+                'Date: ${date??= " "}',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+              ),
+            ),
       ])),
     );
   }

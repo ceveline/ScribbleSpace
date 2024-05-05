@@ -22,6 +22,14 @@ class _JournalPageState extends State<JournalPage> {
   late User user; // Declare user as late to initialize it in initState()
   late String email; // Declare email as late
 
+  TextEditingController _searchController = TextEditingController();
+
+  String _searchQuery = '';
+
+  List<String> publicationTitles = [];
+  List<String> publicationTexts = [];
+  List<dynamic> publicationIds = [];
+
   @override
   void initState() {
     super.initState();
@@ -30,15 +38,9 @@ class _JournalPageState extends State<JournalPage> {
     email = user.email ?? "";
     fetchJournal();
   }
-  TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
-
-  // Dummy code this will be retrieved from firebase
-  List<String> publicationTitles = [];
-  List<String> publicationTexts = [];
 
   void fetchJournal() async {
-    // Query Firestore for publications
+    // Query Firestore for Journals
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
         .collection('journals')
@@ -50,6 +52,7 @@ class _JournalPageState extends State<JournalPage> {
       var data = doc.data();
       publicationTitles.add(data['Title']);
       publicationTexts.add(data['Text']);
+      publicationIds.add(doc.id);
     });
     // Update UI after fetching data
     setState(() {});
@@ -194,6 +197,7 @@ class _JournalPageState extends State<JournalPage> {
                                                 user: user,
                                             title: publicationTitles[index],
                                             text: publicationTexts[index],
+                                                id: publicationIds[index],
                                           ),
                                         ),
                                       );
@@ -250,7 +254,8 @@ class _JournalPageState extends State<JournalPage> {
                             ? JournalWidget(
                           user: user,
                           title: publicationTitles[index], // Format the title
-                          text: publicationTexts[index], // Use the corresponding text
+                          text: publicationTexts[index],
+                        id: publicationIds[index],
                         )
                             : Container();
                       }),
@@ -416,61 +421,18 @@ void showInSnackBar(BuildContext context, String value) {
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
-// GestureDetector MyPublications(
-//     Widget title, String text, GestureTapCallback onTap) {
-//   DateTime now = DateTime.now();
-//   String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
-//   return GestureDetector(
-//     onTap: onTap,
-//     child: Container(
-//       margin: const EdgeInsets.only(bottom: 15),
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(25.0),
-//       ),
-//       height: 120,
-//       width: 350,
-//       child: Stack(
-//         children: [
-//           Positioned(
-//             top: 10,
-//             left: 10,
-//             child: Container(
-//               width: 350,
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   // Display the title widget directly
-//                   title,
-//                 ],
-//               ),
-//             ),
-//           ),
-//           Positioned(
-//             bottom: 10,
-//             right: 10,
-//             child: Text(
-//               '${formattedDate}',
-//               style: TextStyle(
-//                 fontSize: 15,
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//     ),
-//   );
-// }
 class JournalWidget extends StatelessWidget {
   final User user;
   final String title;
   final String text;
+  final String id;
   final String? query;
 
   JournalWidget({
     required this.user,
     required this.title,
     required this.text,
+    required this.id,
     this.query,
   });
 
@@ -485,6 +447,7 @@ class JournalWidget extends StatelessWidget {
               title: title,
               text: text,
               user: user,
+              id: id,
             ),
           ),
         );
