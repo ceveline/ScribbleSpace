@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scribblespace/create_journal.dart';
 import 'color_constants.dart';
@@ -149,51 +150,59 @@ class _CreateJournalState extends State<CreateJournalPost> {
         ],
       ),
       body: SingleChildScrollView(
-          child: Column(children: [
-        Positioned(
-          left: 0,
-          right: 0,
-          top: 100,
-          child: Container(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              widget.title.toString(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          // Ensure items stretch horizontally
+          children: [
+           Container(
+             margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
+             padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
+             color: Colors.white.withOpacity(0.2),
+             child:
+          Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  widget.title.toString(),
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+
+           ),
+            // Other content
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Container(
+                child: Text(
+                  '${_textController.text}',
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(16),
-          child: Container(
-            child: Text(
-              '${_textController.text}',
-              textAlign: TextAlign.justify,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
+            Container(
+              margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
+              padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
+              color: Colors.white.withOpacity(0.2),
+              child: Text(
+                'Date: ${date ??= " "}',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ),
+          ],
         ),
-        Container(
-          margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
-          padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
-          color: Colors.white.withOpacity(0.2),
-          child: Text(
-            'Date: ${date ??= " "}',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ])),
+      ),
     );
   }
 }
