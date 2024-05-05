@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scribblespace/create_journal.dart';
@@ -40,17 +39,20 @@ class _CreateJournalState extends State<CreateJournalPost> {
         widget.titleController ?? TextEditingController(text: widget.title);
     _textController =
         widget.textController ?? TextEditingController(text: widget.text);
-      fetchDate().then((value) {
-        setState(() {
-          date = value;
-        });
+    fetchDate().then((value) {
+      setState(() {
+        date = value;
       });
-    }
+    });
+  }
 
   Future<String?> fetchDate() async {
     if (widget.id != null) {
-      DocumentSnapshot<Map<String, dynamic>> snapshot =
-      await FirebaseFirestore.instance.collection('journals').doc(widget.id!).get();
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+          .instance
+          .collection('journals')
+          .doc(widget.id!)
+          .get();
       if (snapshot.exists) {
         // Check if the 'Date' field exists and return it if it does
         if (snapshot.data() != null && snapshot.data()!.containsKey('Date')) {
@@ -62,7 +64,6 @@ class _CreateJournalState extends State<CreateJournalPost> {
     return null;
   }
 
-
   @override
   void dispose() {
     _titleController.dispose();
@@ -73,102 +74,125 @@ class _CreateJournalState extends State<CreateJournalPost> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          backgroundColor: ColorConstants.darkblue,
-          appBar: AppBar(
-            title: Text(
-              '${_titleController.text}',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            backgroundColor: ColorConstants.darkblue,
-            toolbarHeight: 80,
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pushReplacement(
+      backgroundColor: ColorConstants.darkblue,
+      appBar: AppBar(
+        backgroundColor: ColorConstants.darkblue,
+        toolbarHeight: 80,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => JournalPage()),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+        ),
+        actions: [
+          IconButton(
+            iconSize: 30,
+            onPressed: () {
+              Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => JournalPage()),
-                );
-              },
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-              ),
-            ),
-            actions: [
-              IconButton(
-                iconSize: 30,
-                onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => EditJournalScreen(documentId: widget.id!, user: widget.user,  title: "${ _titleController.text}", text:"${ _textController.text}"))
-                  );},
-                icon: Icon(Icons.edit, color: Colors.white),
-              ),
-              IconButton(
-                iconSize: 30,
-                onPressed: () {
-                  showDialog(context: context, builder: (BuildContext context) {
+                  MaterialPageRoute(
+                      builder: (context) => EditJournalScreen(
+                          documentId: widget.id!,
+                          user: widget.user,
+                          title: "${_titleController.text}",
+                          text: "${_textController.text}")));
+            },
+            icon: Icon(Icons.edit, color: Colors.white),
+          ),
+          IconButton(
+            iconSize: 30,
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
                     // set up the buttons
                     Widget cancelButton = TextButton(
                       child: Text("Cancel"),
-                      onPressed:  () {
+                      onPressed: () {
                         Navigator.of(context, rootNavigator: true).pop();
                       },
                     );
                     Widget deleteButton = TextButton(
                       child: Text("Delete"),
-                      onPressed:  () async {
+                      onPressed: () async {
                         DocumentReference<Map<String, dynamic>> docRef =
-                        FirebaseFirestore.instance
-                            .collection('journals')
-                            .doc(widget.id);
+                            FirebaseFirestore.instance
+                                .collection('journals')
+                                .doc(widget.id);
 
                         await docRef.delete();
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => JournalPage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => JournalPage()));
                       },
                     );
                     return AlertDialog(
                       title: Text('Delete Journal'),
-                      content: Text('Are you sure you want to delete this journal entry?'),
+                      content: Text(
+                          'Are you sure you want to delete this journal entry?'),
                       actions: [
                         cancelButton,
                         deleteButton,
                       ],
                     );
                   });
-                },
-                icon: Icon(Icons.delete, color: Colors.red),
-              ),
-
-            ],
+            },
+            icon: Icon(Icons.delete, color: Colors.red),
           ),
+        ],
+      ),
       body: SingleChildScrollView(
           child: Column(children: [
-        Padding(
-          padding: EdgeInsets.all(20),
+        Positioned(
+          left: 0,
+          right: 0,
+          top: 100,
           child: Container(
+            padding: EdgeInsets.all(16),
             child: Text(
-              '${_textController.text}',
+              widget.title.toString(),
+              textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
-            Container(
-              margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
-              padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
-              color: Colors.white.withOpacity(0.2),
-              child: Text(
-                'Date: ${date??= " "}',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                ),
+        Padding(
+          padding: EdgeInsets.all(16),
+          child: Container(
+            child: Text(
+              '${_textController.text}',
+              textAlign: TextAlign.justify,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.white,
               ),
             ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
+          padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
+          color: Colors.white.withOpacity(0.2),
+          child: Text(
+            'Date: ${date ??= " "}',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+            ),
+          ),
+        ),
       ])),
     );
   }
