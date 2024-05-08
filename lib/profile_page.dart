@@ -9,6 +9,7 @@ import 'mainmenu_screen.dart';
 import 'journal_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'individual_publication_page.dart';
+import 'login_screen.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -63,26 +64,41 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.darkblue,
+      backgroundColor: ColorConstants.purple,
       appBar: AppBar(
-        backgroundColor: ColorConstants.purple,
+        backgroundColor: ColorConstants.darkblue,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         child: Stack(
           children: [
             Column(
+
               children: [
                 //Purple header
                 Container(
                   height: 200,
                   width: MediaQuery.of(context).size.width,
+
                   decoration: BoxDecoration(
-                    color: ColorConstants.purple,
+
+                    image: DecorationImage(
+                      image: AssetImage('assets/profile_back.png'), // Replace with your image asset path
+                      fit: BoxFit.cover, // Adjust the fit as needed
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.4),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      )
+                    ],
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(25.0),
-                      // Adjust the radius as needed
+                      bottomLeft: Radius.circular(20.0),
+
                       bottomRight:
-                          Radius.circular(25.0), // Adjust the radius as needed
+                          Radius.circular(20.0),
                     ),
                   ),
                   child: Column(
@@ -98,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 width: 120,
                                 child: IconButton(
                                   icon:
-                                      Image.asset('assets/profile_picture.png'),
+                                      Image.asset('assets/white_icon.png'),
                                   onPressed: () {
                                     Navigator.push(
                                       context,
@@ -131,9 +147,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   left: 0,
                   right: 0,
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: Text(
+                    width: MediaQuery.of(context).size.width-80,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
                         "My Publications",
                         style: TextStyle(
                           fontSize: 30,
@@ -141,6 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: Colors.white,
                         ),
                       ),
+                      ]
                     ),
                   ),
                 ),
@@ -260,7 +279,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
-              // onTap: ,
+              onTap: (){
+                FirebaseAuth.instance.signOut();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+
+              },
             ),
           ],
         ),
@@ -302,7 +325,7 @@ class PublicationWidget extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: Colors.white,
+        color: ColorConstants.darkblue,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.4),
@@ -334,7 +357,7 @@ class PublicationWidget extends StatelessWidget {
               Text(
               title,
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
@@ -343,7 +366,7 @@ class PublicationWidget extends StatelessWidget {
             Text(
               "${(text.length > 100) ? text.toString().substring(0, 90) : text.toString()}",
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
                 fontSize: 12,
               ),
             ),
@@ -357,7 +380,7 @@ class PublicationWidget extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: ColorConstants.darkblue,
+                        color: ColorConstants.purple,
                       ),
                       padding: EdgeInsets.all(8),
                       child: Text(
@@ -376,7 +399,7 @@ class PublicationWidget extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: ColorConstants.darkblue,
+                        color: ColorConstants.purple,
                       ),
                       padding: EdgeInsets.all(8),
                       child: Text(

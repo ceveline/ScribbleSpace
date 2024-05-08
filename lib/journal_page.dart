@@ -12,6 +12,7 @@ import 'journal_post.dart';
 import 'profile_page.dart';
 import 'mainmenu_screen.dart';
 import 'view_profile.dart';
+import 'login_screen.dart';
 
 class JournalPage extends StatefulWidget {
   @override
@@ -354,7 +355,11 @@ class _JournalPageState extends State<JournalPage> {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
-              // onTap: ,
+              onTap: (){
+                FirebaseAuth.instance.signOut();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+
+              },
             ),
           ],
         ),
