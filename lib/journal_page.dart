@@ -78,9 +78,10 @@ class _JournalPageState extends State<JournalPage> {
           );
         },
       ),
-      backgroundColor: ColorConstants.darkblue,
+      backgroundColor: ColorConstants.purple,
       appBar: AppBar(
-        backgroundColor: ColorConstants.purple,
+        backgroundColor: ColorConstants.darkblue,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         child: Stack(
@@ -92,12 +93,24 @@ class _JournalPageState extends State<JournalPage> {
                   height: 200,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                    color: ColorConstants.purple,
+
+                    image: DecorationImage(
+                      image: AssetImage('assets/profile_back.png'), // Replace with your image asset path
+                      fit: BoxFit.cover, // Adjust the fit as needed
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.4),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      )
+                    ],
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(25.0),
-                      // Adjust the radius as needed
+                      bottomLeft: Radius.circular(20.0),
+
                       bottomRight:
-                          Radius.circular(25.0), // Adjust the radius as needed
+                      Radius.circular(20.0),
                     ),
                   ),
                   child: Column(
@@ -113,7 +126,7 @@ class _JournalPageState extends State<JournalPage> {
                                 width: 120,
                                 child: IconButton(
                                   icon:
-                                      Image.asset('assets/profile_picture.png'),
+                                      Image.asset('assets/white_icon.png'),
                                   onPressed: () {
                                     Navigator.push(
                                       context,
@@ -462,7 +475,7 @@ class JournalWidget extends StatelessWidget {
         margin: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: Colors.white,
+          color: ColorConstants.darkblue,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.4),
@@ -486,7 +499,7 @@ class JournalWidget extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
@@ -494,7 +507,7 @@ class JournalWidget extends StatelessWidget {
                   Text(
                     "${(text.length > 100) ? text.toString().substring(0, 90) : text.toString()}",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 12,
                     ),
                   ),
