@@ -80,7 +80,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
               height: 250,
               width: 250,
               child: Image.asset(
-                'assets/profile_picture.png',
+                'assets/white_icon.png',
               ),
             ),
           ),
