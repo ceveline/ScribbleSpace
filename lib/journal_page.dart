@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'color_constants.dart';
-import 'package:intl/intl.dart';
 import 'create_journal.dart';
 import 'journal_post.dart';
 import 'profile_page.dart';
@@ -57,9 +56,7 @@ class _JournalPageState extends State<JournalPage> {
     });
     // Update UI after fetching data
     setState(() {});
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -88,14 +85,14 @@ class _JournalPageState extends State<JournalPage> {
           children: [
             Column(
               children: [
-                //Purple header
+                // Header
                 Container(
                   height: 200,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-
                     image: DecorationImage(
-                      image: AssetImage('assets/profile_back.png'), // Replace with your image asset path
+                      image: AssetImage('assets/journal_back.png'),
+                      // Replace with your image asset path
                       fit: BoxFit.cover, // Adjust the fit as needed
                     ),
                     boxShadow: [
@@ -108,9 +105,7 @@ class _JournalPageState extends State<JournalPage> {
                     ],
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20.0),
-
-                      bottomRight:
-                      Radius.circular(20.0),
+                      bottomRight: Radius.circular(20.0),
                     ),
                   ),
                   child: Column(
@@ -125,8 +120,7 @@ class _JournalPageState extends State<JournalPage> {
                                 height: 100,
                                 width: 120,
                                 child: IconButton(
-                                  icon:
-                                      Image.asset('assets/white_icon.png'),
+                                  icon: Image.asset('assets/white_icon.png'),
                                   onPressed: () {
                                     Navigator.push(
                                       context,
@@ -159,22 +153,12 @@ class _JournalPageState extends State<JournalPage> {
                   left: 0,
                   right: 0,
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            "My Journal",
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Container(
+                    width: MediaQuery.of(context).size.width - 25,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Container(
                             width: 350,
                             height: 50,
                             child: SearchAnchor(
@@ -198,20 +182,23 @@ class _JournalPageState extends State<JournalPage> {
                                     });
                                   },
                                   onSubmitted: (String query) {
+                                    query = _searchController.text;
+
                                     query.toLowerCase();
                                     // Find the index of the query in publicationTitles
-                                    int index =
-                                    publicationTitles.indexWhere((title) => title.toLowerCase() == query);
+                                    int index = publicationTitles.indexWhere(
+                                        (title) =>
+                                            title.toLowerCase() == query);
                                     if (index != -1) {
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               CreateJournalPost(
-                                                user: user,
+                                            user: user,
                                             title: publicationTitles[index],
                                             text: publicationTexts[index],
-                                                id: publicationIds[index],
+                                            id: publicationIds[index],
                                           ),
                                         ),
                                       );
@@ -248,29 +235,43 @@ class _JournalPageState extends State<JournalPage> {
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          "My Journals",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
                 SizedBox(height: 15.0),
                 Container(
-                  width: 350,
+                  width: MediaQuery.of(context).size.width - 5,
                   child: ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: publicationTitles.length,
                       itemBuilder: (BuildContext context, int index) {
                         // Check if the title matches the query from the beginning
-                        bool matchesSearch = publicationTitles[index].toLowerCase().startsWith(_searchQuery.toLowerCase());
+                        bool matchesSearch = publicationTitles[index]
+                            .toLowerCase()
+                            .startsWith(_searchQuery.toLowerCase());
 
                         return matchesSearch
                             ? JournalWidget(
-                          user: user,
-                          title: publicationTitles[index], // Format the title
-                          text: publicationTexts[index],
-                        id: publicationIds[index],
-                        )
+                                user: user,
+                                title: publicationTitles[
+                                    index], // Format the title
+                                text: publicationTexts[index],
+                                id: publicationIds[index],
+                              )
                             : Container();
                       }),
                 ),
@@ -368,19 +369,17 @@ class _JournalPageState extends State<JournalPage> {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
-              onTap: (){
+              onTap: () {
                 FirebaseAuth.instance.signOut();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
               },
             ),
           ],
         ),
       ),
     );
-
   }
-
 }
 
 Widget formatTitle(String title, String query) {

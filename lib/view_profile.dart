@@ -92,35 +92,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                 SizedBox(
                   height: 250,
                 ),
-                //username
-                Container(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
-                  child: Text(
-                    "Username:",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  width: 340,
-                  height: 70,
-                  child: TextField(
-                    controller: _usernameController,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      filled: true,
-                      hintStyle: TextStyle(color: Colors.grey),
-                      hintText: "jondoe123",
-                      fillColor: Colors.white70,
-                    ),
-                  ),
-                ),
-
                 // Email
                 Container(
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 5),

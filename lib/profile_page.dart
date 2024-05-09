@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'color_constants.dart';
-import 'package:intl/intl.dart';
+import 'create_post_screen.dart';
 import 'view_profile.dart';
 import 'mainmenu_screen.dart';
 import 'journal_page.dart';
@@ -65,6 +65,20 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.purple,
+      floatingActionButton: FloatingActionButton.large(
+        elevation: 5,
+        backgroundColor: ColorConstants.purple,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: const Icon(Icons.edit, color: Colors.white),
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => CreatePostScreen()),
+          );
+        },
+      ),
       appBar: AppBar(
         backgroundColor: ColorConstants.darkblue,
         iconTheme: IconThemeData(color: Colors.white),
@@ -147,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   left: 0,
                   right: 0,
                   child: Container(
-                    width: MediaQuery.of(context).size.width-80,
+                    width: MediaQuery.of(context).size.width-25,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -167,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 15,
                 ),
                 Container(
-                  width: 350,
+                  width: MediaQuery.of(context).size.width -5,
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: publicationTitles.length,

@@ -23,7 +23,7 @@ String getDate() {
     return Scaffold(
         backgroundColor: ColorConstants.purple,
         appBar: AppBar(
-          title: Text('Create Journal',
+          title: Text('Create a Journal Entry',
             style: TextStyle(
               color: Colors.white,
               fontSize: 27,
