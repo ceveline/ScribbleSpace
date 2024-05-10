@@ -3,6 +3,7 @@ import 'package:scribblespace/create_post_screen.dart';
 import 'package:scribblespace/login_screen.dart';
 import 'package:scribblespace/publication_everything_page.dart';
 import 'package:scribblespace/publication_page.dart';
+import 'package:scribblespace/trivia_page.dart';
 import 'color_constants.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -147,6 +148,10 @@ class MainMenuScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
+              onTap: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TriviaPage())),
             ),
             SizedBox(
               height: 30,
