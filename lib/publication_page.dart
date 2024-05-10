@@ -14,22 +14,62 @@ class PublicationPage extends StatefulWidget {
 }
 
 class _PublicationPageState extends State<PublicationPage> {
+  TextEditingController _searchController = TextEditingController();
+
+  String _searchQuery = '';
+
+  List<String> publicationTitles = [];
+  List<String> publicationTexts = [];
+  List<dynamic> publicationIds = [];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.category}', style: TextStyle(color: Colors.white,
-            fontSize: 30, fontWeight: FontWeight.bold),),
+        title: Text(
+          '${widget.category}',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: ColorConstants.darkblue,
-        leading: IconButton(onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen()));
-        },
-            icon: Icon(Icons.arrow_back_ios, color: Colors.white,)),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen()));
+          },
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+        ),
         toolbarHeight: 100,
       ),
       backgroundColor: ColorConstants.purple,
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                labelText: 'Search',
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: () {
+                    _searchController.clear();
+                    setState(() {
+                      _searchQuery = '';
+                    });
+                  },
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value.toLowerCase();
+                });
+              },
+            ),
+          ),
           Expanded(
             child: StreamBuilder(
               stream: FirebaseFirestore.instance.collection('publications').snapshots(),
@@ -40,18 +80,33 @@ class _PublicationPageState extends State<PublicationPage> {
                     return data['Category-1'] == widget.category || data['Category-2'] == widget.category;
                   }).toList();
 
+                  if (_searchQuery.isNotEmpty) {
+                    filteredDocs = filteredDocs.where((doc) {
+                      var post = doc.data();
+                      return post['Title'].toString().toLowerCase().contains(_searchQuery) ||
+                          post['Text'].toString().toLowerCase().contains(_searchQuery);
+                    }).toList();
+                  }
+
                   return ListView.builder(
                     itemCount: filteredDocs.length,
                     itemBuilder: (context, index) {
                       var post = filteredDocs[index].data();
                       return GestureDetector(
-                        onTap: (){
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context)
-                              => IndividualPubPage(title: post['Title'],
-                                text: post['Text'], image: post['Image'], user: post['User'],
-                                category1: post['Category-1'], category2: post['Category-2'],
-                              )));
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => IndividualPubPage(
+                                title: post['Title'],
+                                text: post['Text'],
+                                image: post['Image'],
+                                user: post['User'],
+                                category1: post['Category-1'],
+                                category2: post['Category-2'],
+                              ),
+                            ),
+                          );
                         },
                         child: Container(
                           padding: EdgeInsets.all(15),
