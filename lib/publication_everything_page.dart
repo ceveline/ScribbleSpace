@@ -46,29 +46,40 @@ class _EverythingPublicationPageState extends State<EverythingPublicationPage> {
       backgroundColor: ColorConstants.purple,
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Search',
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.clear),
-                  onPressed: () {
-                    _searchController.clear();
-                    setState(() {
-                      _searchQuery = '';
-                    });
-                  },
-                ),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value.toLowerCase();
-                });
-              },
+          SizedBox(height: 15,),
+          Container(
+            width: 350,
+            height: 50,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25.0),
+                color: Colors.white
             ),
+            padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 5),
+            child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  labelText: "Search",
+                  icon: Icon(Icons.search),
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.search),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() {
+                        _searchQuery = '';
+                      });
+                    },
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value.toLowerCase();
+                  });
+                },
+              ),
           ),
+          SizedBox(height: 15,),
           Expanded(
             child: StreamBuilder(
               stream: FirebaseFirestore.instance.collection('publications').snapshots(),

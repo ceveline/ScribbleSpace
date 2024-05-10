@@ -47,12 +47,21 @@ class _PublicationPageState extends State<PublicationPage> {
       backgroundColor: ColorConstants.purple,
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          SizedBox(height: 15,),
+          Container(
+            width: 350,
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              color: Colors.white
+            ),
+            padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 5),
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
                 labelText: 'Search',
+                icon: Icon(Icons.search),
+                border: InputBorder.none,
                 suffixIcon: IconButton(
                   icon: Icon(Icons.clear),
                   onPressed: () {
@@ -70,6 +79,7 @@ class _PublicationPageState extends State<PublicationPage> {
               },
             ),
           ),
+          SizedBox(height: 15,),
           Expanded(
             child: StreamBuilder(
               stream: FirebaseFirestore.instance.collection('publications').snapshots(),

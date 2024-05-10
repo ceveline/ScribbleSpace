@@ -214,9 +214,6 @@ class MainMenuScreen extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-                  /*
-
-                   */
                   GestureDetector(
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(
