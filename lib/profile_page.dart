@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,6 +7,8 @@ import 'package:intl/intl.dart';
 import 'view_profile.dart';
 import 'mainmenu_screen.dart';
 import 'journal_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'individual_publication_page.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -13,22 +16,50 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
-  List<String> publicationTitles = [
-    "Publication 1",
-    "Publication 2",
-    "Publication 3",
-  ];
-  List<String> publicationTexts = [
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pharetra pharetra massa massa ultricies. Semper eget duis at tellus at. Arcu cursus euismod quis viverra nibh cras pulvinar. Rhoncus dolor purus non enim praesent elementum facilisis leo. Pretium viverra suspendisse potenti nullam ac.",
-    "Goodbye",
-    "The Beatles",
-  ];
+  late User user; // Declare user as late to initialize it in initState()
+  late String email; // Declare email as late
+  List<String> publicationTitles = [];
+  List<String> publicationTexts = [];
+  List<String> publicationImageUrls = [];
   List<Image> publicationImages = [
     Image.asset('assets/profile_picture.png'),
     Image.asset('assets/icon.png'),
     Image.asset('assets/text.png'),
   ];
+  List<String> publicationCategory1 = [];
+  List<String> publicationCategory2 = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize user and email in initState()
+    user = FirebaseAuth.instance.currentUser!;
+    email = user.email ?? "";
+    fetchPublications();
+  }
+
+  void fetchPublications() async {
+    // Query Firestore for publications
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('publications')
+        .where('User', isEqualTo: email)
+        .get();
+
+    // Extract publication data from snapshot and populate lists
+    snapshot.docs.forEach((doc) {
+      var data = doc.data();
+      publicationTitles.add(data['Title']);
+      publicationTexts.add(data['Text']);
+      publicationImageUrls.add(data['Image']);
+      publicationCategory1.add(data['Category-1']);
+      publicationCategory2.add(data['Category-2']);
+    });
+
+    // Update UI after fetching data
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,22 +94,24 @@ class _ProfilePageState extends State<ProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              height: 100,
-                              width: 120,
-                              child: IconButton(
-                                icon: Image.asset('assets/profile_picture.png'),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => ViewProfileScreen()),
-                                  );
-                                },
-                              )
-                            ),
+                                height: 100,
+                                width: 120,
+                                child: IconButton(
+                                  icon:
+                                      Image.asset('assets/profile_picture.png'),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ViewProfileScreen()),
+                                    );
+                                  },
+                                )),
                             SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                'Trevor Obodoechina',
+                                '${email?.substring(0, email?.indexOf('@'))}',
                                 style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
@@ -115,41 +148,19 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 15,
                 ),
                 Container(
-
                   width: 350,
                   child: ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
                     itemCount: publicationTitles.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return MyPublications(
-                          publicationTitles[index],
-                          publicationTexts[index],
-                              publicationImages[index],
-                              () {
-                            showDialog(context: context,
-                                builder: (BuildContext context) {
-                                  String content = publicationTexts[index]; // Initialize content with full text
-                                  if (publicationTexts[index].length > 80) {
-                                    content = publicationTexts[index].substring(0, 80) + "...";
-                                  }
-                                  return  AlertDialog(
-                                    title:  Text('${publicationTitles[index]}'),
-                                    content: Text('${content}'),
-                                    actions: [
-                                      TextButton(onPressed: () {
-                                      //Enter logic to view post here
-                                      }, child: const Text("View")),
-                                      TextButton(onPressed: () {
-                                      //Enter logic to edit post here
-                                      }, child: const Text("Edit"))
-                                    ],
-                                  );
-
-                                });
-                            // Navigate to EditJournalScreen with publication details
-
-                          }
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return PublicationWidget(
+                        user: user,
+                        title: publicationTitles[index],
+                        text: publicationTexts[index],
+                        imageUrl: publicationImageUrls[index],
+                        category1: publicationCategory1[index],
+                        category2: publicationCategory2[index],
                       );
                     },
                   ),
@@ -181,10 +192,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: Colors.white,
                 ),
               ),
-              onTap: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MainMenuScreen())),
+              onTap: () => Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => MainMenuScreen())),
             ),
             SizedBox(
               height: 30,
@@ -201,11 +210,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: Colors.white,
                 ),
               ),
-              onTap: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ProfilePage())),
-
+              onTap: () => Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => ProfilePage())),
             ),
             SizedBox(
               height: 30,
@@ -229,7 +235,7 @@ class _ProfilePageState extends State<ProfilePage> {
             //journal
             ListTile(
               leading:
-              Icon(Icons.menu_book_rounded, size: 40, color: Colors.white),
+                  Icon(Icons.menu_book_rounded, size: 40, color: Colors.white),
               title: Text(
                 'Journal',
                 style: TextStyle(
@@ -237,11 +243,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
-              onTap: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => JournalPage())),
-
+              onTap: () => Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => JournalPage())),
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height - 430,
@@ -266,78 +269,135 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-GestureDetector MyPublications(String title, String content, Image picture, GestureTapCallback onTap) {
-  if(content.length > 80) {
-    content = content.substring(0, 75) + "...";
-  }
-  DateTime now = DateTime.now();
-  String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
-  return GestureDetector(
-    onTap: onTap,
+class PublicationWidget extends StatelessWidget {
+  final User user;
+  final String title;
+  final String text;
+  final String imageUrl;
+  final String? category1;
+  final String? category2;
+
+  PublicationWidget({
+    required this.user,
+    required this.title,
+    required this.text,
+    required this.imageUrl,
+    this.category1,
+    this.category2,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: (){
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context)
+          => IndividualPubPage(title: title,
+            text: text, image: imageUrl, user: user.email,
+            category1: category1, category2: category2,
+          )));
+    },
     child: Container(
-    margin: const EdgeInsets.only(bottom: 15),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(25.0),
-    ),
-    height: 200,
-    width: 350,
-    child: Stack(
-      children: [
-        // Image
-        Positioned(
-          top: 0,
-          left: 0,
-          child: Container(
-            width: 100, // Width of the image
-            height: 100, // Height of the image
-            child: picture,
+      padding: EdgeInsets.all(15),
+      margin: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.4),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          )
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          ClipRRect(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              height: MediaQuery.of(context).size.width / 2.7,
+              width: MediaQuery.of(context).size.width / 3,
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-        ),
-        // Title and content
-        Positioned(
-          top: 10,
-          left: 110,
-          // Adjust this value to position the title next to the image
-          child: Container(
-           width: 230,
+          Expanded(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title
-
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                SizedBox(height: 8), // Add some space between title and content
-                // Content
-
-                Text(
-                  content,
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
+              Text(
+              title,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              "${(text.length > 100) ? text.toString().substring(0, 90) : text.toString()}",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (category1 != "none")
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: ColorConstants.darkblue,
+                      ),
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        category1!,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  SizedBox(height: 5),
+                  if (category2 != "none")
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: ColorConstants.darkblue,
+                      ),
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        category2!,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                          )
+                      ]),
 
               ],
             ),
           ),
-        ),
-        Positioned(
-            bottom: 10,
-            right: 10,
-            child: Text('${formattedDate}',
-            style: TextStyle(
-              fontSize: 15
-            ),))
-
-      ],
+        ],
+      ),
     ),
-    ),
-  );
+    );
+  }
 }

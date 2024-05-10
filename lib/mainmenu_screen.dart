@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:scribblespace/create_post_screen.dart';
+import 'package:scribblespace/login_screen.dart';
+import 'package:scribblespace/publication_everything_page.dart';
+import 'package:scribblespace/publication_page.dart';
 import 'color_constants.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'journal_page.dart';
 import 'profile_page.dart';
 
 class MainMenuScreen extends StatelessWidget {
+
   const MainMenuScreen({super.key});
 
   Container _buildContainer(Icon icon, String title, double screenSize) {
@@ -39,6 +44,7 @@ class MainMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final timeFormatter = DateFormat('HH:mm:ss');
+    final email = FirebaseAuth.instance.currentUser?.email.toString();
 
     String _greetingMessage() {
       final DateTime now = DateTime.now();
@@ -73,7 +79,7 @@ class MainMenuScreen extends StatelessWidget {
       appBar: AppBar(
         //use an api for time of the day, create a method for it
         title: Text(
-          'Hello, jondoe!\n${_greetingMessage()}',
+          'Hello, ${email?.substring(0, email?.indexOf('@'))}!\n${_greetingMessage()}',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: ColorConstants.darkblue,
@@ -177,7 +183,11 @@ class MainMenuScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
-              // onTap: ,
+              onTap: (){
+                FirebaseAuth.instance.signOut();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+
+              },
             ),
           ],
         ),
@@ -204,44 +214,50 @@ class MainMenuScreen extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    height: 120,
-                    width: MediaQuery.of(context).size.width - 25,
-                    // color: ColorConstants.darkblue,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        color: ColorConstants.darkblue,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.4),
-                            // Shadow color
-                            spreadRadius: 2,
-                            // Spread radius
-                            blurRadius: 5,
-                            // Blur radius
-                            offset: Offset(0, 3),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => EverythingPublicationPage()));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      height: 120,
+                      width: MediaQuery.of(context).size.width - 25,
+                      // color: ColorConstants.darkblue,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: ColorConstants.darkblue,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.4),
+                              // Shadow color
+                              spreadRadius: 2,
+                              // Spread radius
+                              blurRadius: 5,
+                              // Blur radius
+                              offset: Offset(0, 3),
+                            )
+                          ]),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.cloud_circle,
+                            size: 50,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 30,
+                          ),
+                          Text(
+                            'Everything',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 28),
                           )
-                        ]),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.cloud_circle,
-                          size: 50,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          width: 30,
-                        ),
-                        Text(
-                          'Everything',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 28),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -249,8 +265,56 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Entertainment',)));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      height: 120,
+                      width: MediaQuery.of(context).size.width - 25,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: ColorConstants.darkblue,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.4),
+                              // Shadow color
+                              spreadRadius: 2,
+                              // Spread radius
+                              blurRadius: 5,
+                              // Blur radius
+                              offset: Offset(0, 3),
+                            )
+                          ]
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.movie,
+                            size: 50,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 30),
+                          Text(
+                            'Entertainment',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 28,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Food',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -297,8 +361,8 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Health & Wellness',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -345,8 +409,8 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Sports',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -393,8 +457,8 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Technology',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -441,8 +505,8 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Travel',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -489,8 +553,8 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // onTap callback function here
-                      // This function will be called when the container is tapped
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => PublicationPage(category: 'Pets & Animals',)));
                     },
                     child: Container(
                       padding: EdgeInsets.all(20),

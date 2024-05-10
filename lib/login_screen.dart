@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scribblespace/mainmenu_screen.dart';
 import 'color_constants.dart';
 import 'registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -99,10 +100,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         FirebaseAuth.instance.signInWithEmailAndPassword(
                             email: _emailController.text,
-                            password: _passwordController.text).then((value){
+                            password: _passwordController.text
+                        ).then((value) {
+                          // If authentication is successful, navigate to MainMenuScreen
                           print('Signing in');
-                        }).onError((error, stackTrace){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen()));
+                        }).catchError((error) {
+                          // If authentication fails, show an error message
                           print('Error: ${error.toString()}');
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Authentication failed. Please check your email and password.')));
                         });
                       },
                       child: Text(
@@ -126,6 +132,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               context,
                               MaterialPageRoute(builder: (context) => RegistrationScreen()),
                             );
+                            _emailController.clear();
+                            _passwordController.clear();
                           },
                           child: Text(
                             'Don\'t have an account? Register now!',

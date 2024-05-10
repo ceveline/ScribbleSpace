@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'color_constants.dart';
 import 'journal_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateJournalScreen extends StatefulWidget {
   @override
@@ -10,7 +13,11 @@ class CreateJournalScreen extends StatefulWidget {
 
 class _CreateJournalScreenState extends State<CreateJournalScreen> {
   String? title, text;
+  final firestore = FirebaseFirestore.instance;
+String getDate() {
+  return DateFormat.yMMMMd().format(DateTime.now()).toString();
 
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +88,15 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                       ),
                       child: TextButton(
                           onPressed: () {
-
+                            if (title != null && text != null) {
+                              firestore.collection("journals").add({
+                                "Title": title,
+                                "Text": text,
+                                "User": FirebaseAuth.instance.currentUser?.email.toString(),
+                                "Date": getDate(),
+                              });
+                            }
+                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => JournalPage()));
                           },
                           child: Text('Save', style: TextStyle(
                               color: Colors.white, fontSize: 20),)

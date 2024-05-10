@@ -3,6 +3,9 @@ import 'color_constants.dart';
 import 'edit_profile.dart';
 import 'profile_page.dart';
 import 'journal_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class ViewProfileScreen extends StatefulWidget {
   @override
@@ -10,9 +13,23 @@ class ViewProfileScreen extends StatefulWidget {
 }
 
 class _ViewProfileScreenState extends State<ViewProfileScreen> {
+  late User user; // Declare user as late to initialize it in initState()
+  late String email; // Declare email as late
+  late String password;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize user and email in initState()
+    user = FirebaseAuth.instance.currentUser!;
+    email = user.email ?? "";
+  }
+
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,35 +121,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   ),
                 ),
 
-                // Password
-                Container(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
-                  child: Text(
-                    "Password:",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  width: 340,
-                  height: 70,
-                  child: TextField(
-                    obscureText: true,
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      filled: true,
-                      hintStyle: TextStyle(color: Colors.grey),
-                      hintText: "*****",
-                      fillColor: Colors.white70,
-                    ),
-                  ),
-                ),
                 // Email
                 Container(
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
@@ -149,7 +137,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   width: 340,
                   height: 70,
                   child: TextField(
-                    obscureText: true,
+                    readOnly: true,
                     controller: _emailController,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -157,7 +145,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                           borderSide: BorderSide(color: Colors.transparent)),
                       filled: true,
                       hintStyle: TextStyle(color: Colors.grey),
-                      hintText: "doe123@gmail.com",
+                      hintText: "${email}",
                       fillColor: Colors.white70,
                     ),
                   ),
