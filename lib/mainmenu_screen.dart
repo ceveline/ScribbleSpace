@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scribblespace/create_post_screen.dart';
 import 'package:scribblespace/login_screen.dart';
+import 'package:scribblespace/publication_everything_page.dart';
 import 'package:scribblespace/publication_page.dart';
 import 'color_constants.dart';
 import 'package:intl/intl.dart';
@@ -213,44 +214,53 @@ class MainMenuScreen extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    height: 120,
-                    width: MediaQuery.of(context).size.width - 25,
-                    // color: ColorConstants.darkblue,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        color: ColorConstants.darkblue,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.4),
-                            // Shadow color
-                            spreadRadius: 2,
-                            // Spread radius
-                            blurRadius: 5,
-                            // Blur radius
-                            offset: Offset(0, 3),
+                  /*
+
+                   */
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => EverythingPublicationPage()));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      height: 120,
+                      width: MediaQuery.of(context).size.width - 25,
+                      // color: ColorConstants.darkblue,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: ColorConstants.darkblue,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.4),
+                              // Shadow color
+                              spreadRadius: 2,
+                              // Spread radius
+                              blurRadius: 5,
+                              // Blur radius
+                              offset: Offset(0, 3),
+                            )
+                          ]),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.cloud_circle,
+                            size: 50,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 30,
+                          ),
+                          Text(
+                            'Everything',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 28),
                           )
-                        ]),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.cloud_circle,
-                          size: 50,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          width: 30,
-                        ),
-                        Text(
-                          'Everything',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 28),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(
