@@ -59,9 +59,9 @@ class _PublicationPageState extends State<PublicationPage> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Search',
-                icon: Icon(Icons.search),
+                hintText: 'Search',
                 border: InputBorder.none,
+                focusedBorder: InputBorder.none,
                 suffixIcon: IconButton(
                   icon: Icon(Icons.clear),
                   onPressed: () {
