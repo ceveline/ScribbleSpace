@@ -41,7 +41,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
   bool checkFetch = true;
 
   Future<void> getImageFromGallery() async {
-    final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       setState(() {
         _image = File(pickedImage.path);
@@ -93,10 +94,10 @@ class _EditPostScreenState extends State<EditPostScreen> {
     if (widget.docId != null) {
       try {
         DocumentSnapshot<Map<String, dynamic>> snapshot =
-        await FirebaseFirestore.instance
-            .collection('publications')
-            .doc(widget.docId!)
-            .get();
+            await FirebaseFirestore.instance
+                .collection('publications')
+                .doc(widget.docId!)
+                .get();
         if (snapshot.exists && snapshot.data() != null) {
           var data = snapshot.data();
           setState(() {
@@ -153,43 +154,43 @@ class _EditPostScreenState extends State<EditPostScreen> {
                 onTap: getImageFromGallery,
                 child: _image != null
                     ? ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 13),
-                    height: 150,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.file(
-                      _image!,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                )
+                        borderRadius: BorderRadius.circular(6),
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 13),
+                          height: 150,
+                          width: MediaQuery.of(context).size.width,
+                          child: Image.file(
+                            _image!,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )
                     : _imageUrl != null
-                    ? ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 13),
-                    height: 150,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.network(
-                      _imageUrl!,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                )
-                    : Container(
-                  margin: EdgeInsets.symmetric(horizontal: 13),
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: ColorConstants.darkblue,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  width: MediaQuery.of(context).size.width,
-                  child: Icon(
-                    Icons.add_a_photo,
-                    color: Colors.white,
-                  ),
-                ),
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 13),
+                              height: 150,
+                              width: MediaQuery.of(context).size.width,
+                              child: Image.network(
+                                _imageUrl!,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          )
+                        : Container(
+                            margin: EdgeInsets.symmetric(horizontal: 13),
+                            height: 150,
+                            decoration: BoxDecoration(
+                              color: ColorConstants.darkblue,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            width: MediaQuery.of(context).size.width,
+                            child: Icon(
+                              Icons.add_a_photo,
+                              color: Colors.white,
+                            ),
+                          ),
               ),
               SizedBox(height: 10),
               Container(
@@ -225,7 +226,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
                             future: fetchCategories(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
-                                  ConnectionState.waiting && checkFetch == true) {
+                                      ConnectionState.waiting &&
+                                  checkFetch == true) {
                                 return CircularProgressIndicator(); // Show loading indicator while fetching data
                               } else if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
@@ -234,7 +236,6 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                 // Data has been fetched successfully
                                 Map<String, String?> categories =
                                     snapshot.data!;
-
 
                                 if (categories['Category-1'] != 'none') {
                                   selectedItems.add(categories['Category-1']!);
@@ -269,7 +270,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                         value: 'Pets & Animals'),
                                   ],
                                   selectedOptions: selectedItems
-                                      .map((item) => ValueItem(label: item, value: item))
+                                      .map((item) =>
+                                          ValueItem(label: item, value: item))
                                       .toList(),
                                   maxItems: 2,
                                   selectionType: SelectionType.multi,
@@ -302,73 +304,94 @@ class _EditPostScreenState extends State<EditPostScreen> {
                             controller: _text,
                           ),
                           SizedBox(height: 50),
-                          Container(
-                            width: 150,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: ColorConstants.darkblue,
-                            ),
-                              child:
-                              TextButton(
-                                onPressed: () async {
-                                  try {
-                                    if (_title.text.isEmpty) {
-                                      print("Title is empty");
-                                    } else if (_text.text.isEmpty) {
-                                      print("Text is empty");
-                                    } else if (selectedItems.isEmpty) {
-                                      print("Selected items are empty");
-                                    } else if (_imageUrl == null && _image == null) {
-                                      print("Image is null");
-                                    } else if (widget.docId == null) {
-                                      print("Document ID is null");
-                                    } else {
-                                      print("All conditions passed");
-
-                                      var imageName = DateTime.now().millisecondsSinceEpoch.toString();
-                                      var storageRef = FirebaseStorage.instance.ref().child('images/$imageName.jpg');
-                                      var uploadTask = storageRef.putFile(_image!);
-
-                                      var downloadUrl = await (await uploadTask).ref.getDownloadURL();
-                                      print("Image uploaded: $downloadUrl");
-
-                                      var category1 = selectedItems.isNotEmpty ? selectedItems[0] : 'none';
-                                      var category2 = selectedItems.length > 1 ? selectedItems[1] : 'none';
-
-                                      await firestore.collection("publications").doc(widget.docId!).update({
-                                        "Title": _title.text,
-                                        "Text": _text.text,
-                                        "User": FirebaseAuth.instance.currentUser?.email.toString(),
-                                        "Category-1": category1,
-                                        "Category-2": category2,
-                                        "Image": downloadUrl.toString(),
-                                      });
-                                      print("Firestore document updated");
-
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => IndividualPubPage(
-                                            title: _title.text,
-                                            text: _text.text,
-                                            user: widget.user,
-                                            image: downloadUrl.toString(),
-                                            category1: category1,
-                                            category2: category2,
-                                            docId: widget.docId!,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  } catch (e) {
-                                    print("Error: $e");
-                                  }
-                                },
-                                child: Text(
-                                  'Update',
-                                  style: TextStyle(color: Colors.white, fontSize: 20),
+                          Center(
+                            child: Container(
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: ColorConstants.darkblue,
                                 ),
-                              )
+                                child: TextButton(
+                                  onPressed: () async {
+                                    try {
+                                      if (_title.text.isEmpty) {
+                                        print("Title is empty");
+                                      } else if (_text.text.isEmpty) {
+                                        print("Text is empty");
+                                      } else if (selectedItems.isEmpty) {
+                                        print("Selected items are empty");
+                                      } else if (_imageUrl == null &&
+                                          _image == null) {
+                                        print("Image is null");
+                                      } else if (widget.docId == null) {
+                                        print("Document ID is null");
+                                      } else {
+                                        print("All conditions passed");
+
+                                        var imageName = DateTime.now()
+                                            .millisecondsSinceEpoch
+                                            .toString();
+                                        var storageRef = FirebaseStorage
+                                            .instance
+                                            .ref()
+                                            .child('images/$imageName.jpg');
+                                        var uploadTask =
+                                            storageRef.putFile(_image!);
+
+                                        var downloadUrl =
+                                            await (await uploadTask)
+                                                .ref
+                                                .getDownloadURL();
+                                        print("Image uploaded: $downloadUrl");
+
+                                        var category1 = selectedItems.isNotEmpty
+                                            ? selectedItems[0]
+                                            : 'none';
+                                        var category2 = selectedItems.length > 1
+                                            ? selectedItems[1]
+                                            : 'none';
+
+                                        await firestore
+                                            .collection("publications")
+                                            .doc(widget.docId!)
+                                            .update({
+                                          "Title": _title.text,
+                                          "Text": _text.text,
+                                          "User": FirebaseAuth
+                                              .instance.currentUser?.email
+                                              .toString(),
+                                          "Category-1": category1,
+                                          "Category-2": category2,
+                                          "Image": downloadUrl.toString(),
+                                        });
+                                        print("Firestore document updated");
+
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                IndividualPubPage(
+                                              title: _title.text,
+                                              text: _text.text,
+                                              user: widget.user,
+                                              image: downloadUrl.toString(),
+                                              category1: category1,
+                                              category2: category2,
+                                              docId: widget.docId!,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    } catch (e) {
+                                      print("Error: $e");
+                                    }
+                                  },
+                                  child: Text(
+                                    'Update',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                )),
                           ),
                         ],
                       ),
