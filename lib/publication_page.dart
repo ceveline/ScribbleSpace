@@ -102,12 +102,14 @@ class _PublicationPageState extends State<PublicationPage> {
                     itemCount: filteredDocs.length,
                     itemBuilder: (context, index) {
                       var post = filteredDocs[index].data();
+                      var pub_id = filteredDocs[index].id;
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => IndividualPubPage(
+                                doc_id: pub_id,
                                 title: post['Title'],
                                 text: post['Text'],
                                 image: post['Image'],
@@ -117,6 +119,7 @@ class _PublicationPageState extends State<PublicationPage> {
                               ),
                             ),
                           );
+                          print(pub_id);
                         },
                         child: Container(
                           padding: EdgeInsets.all(15),

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:scribblespace/edit_publication.dart';
 import 'package:scribblespace/publication_page.dart';
 import 'color_constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class IndividualPubPage extends StatefulWidget {
+  final String? doc_id;
   final String? title;
   final String? text;
   final String? user;
@@ -11,6 +15,7 @@ class IndividualPubPage extends StatefulWidget {
   final String? category2;
 
   const IndividualPubPage({
+    this.doc_id,
     this.title,
     this.text,
     this.image,
@@ -24,20 +29,32 @@ class IndividualPubPage extends StatefulWidget {
 }
 
 class _IndividualPubPageState extends State<IndividualPubPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.darkblue,
       appBar: AppBar(
-        backgroundColor: ColorConstants.darkblue,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-        ),
+      backgroundColor: ColorConstants.darkblue,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: Icon(Icons.arrow_back_ios, color: Colors.white),
       ),
-      body: SingleChildScrollView(
+      actions: [
+        if (widget.user.toString() == FirebaseAuth.instance.currentUser!.email.toString())
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EditPublication(pub_id: widget.doc_id,)));
+
+
+            },
+            icon: Icon(Icons.edit, color: Colors.white),
+          ),
+      ],
+    ),
+    body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
