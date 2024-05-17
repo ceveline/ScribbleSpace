@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'trivia_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -336,6 +336,8 @@ class _JournalPageState extends State<JournalPage> {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
+              onTap: () => Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => TriviaPage())),
             ),
             SizedBox(
               height: 30,

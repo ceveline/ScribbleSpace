@@ -99,6 +99,7 @@ class _EverythingPublicationPageState extends State<EverythingPublicationPage> {
                     itemCount: docs.length,
                     itemBuilder: (context, index) {
                       var post = docs[index].data();
+                      var docId = docs[index].id;
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -111,6 +112,7 @@ class _EverythingPublicationPageState extends State<EverythingPublicationPage> {
                                 user: post['User'],
                                 category1: post['Category-1'],
                                 category2: post['Category-2'],
+                                docId: docId,
                               ),
                             ),
                           );

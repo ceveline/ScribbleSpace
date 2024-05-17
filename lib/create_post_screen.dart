@@ -210,12 +210,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       ),
                       child: TextButton(
                         onPressed: () async {
+                          print('made it 0');
                           if (_title.text != null && _text.text != null
                               && selectedItems.isNotEmpty && _image != null) {
+                            print('made it if:');
                             var imageName = DateTime.now().millisecondsSinceEpoch.toString();
+                            print('made it 1');
                             var storageRef = FirebaseStorage.instance.ref().child('images/$imageName.jpg');
                             var uploadTask = storageRef.putFile(_image!);
+                            print('made it 2');
                             var downloadUrl = await (await uploadTask).ref.getDownloadURL();
+                            print('made it 3');
                             var category1 = selectedItems.isNotEmpty ? selectedItems[0] : 'none';
                             var category2 = selectedItems.length > 1 ? selectedItems[1] : 'none';
 

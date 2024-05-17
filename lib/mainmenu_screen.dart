@@ -138,24 +138,24 @@ class MainMenuScreen extends StatelessWidget {
               height: 30,
             ),
 
-            //trivia
-            ListTile(
-              leading: Icon(Icons.quiz, size: 40, color: Colors.white),
-              title: Text(
-                'Trivia',
-                style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-              onTap: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TriviaPage())),
-            ),
-            SizedBox(
-              height: 30,
-            ),
+            // //trivia
+            // ListTile(
+            //   leading: Icon(Icons.quiz, size: 40, color: Colors.white),
+            //   title: Text(
+            //     'Trivia',
+            //     style: TextStyle(
+            //         fontSize: 22,
+            //         fontWeight: FontWeight.bold,
+            //         color: Colors.white),
+            //   ),
+            //   onTap: () => Navigator.pushReplacement(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (context) => TriviaPage())),
+            // ),
+            // SizedBox(
+            //   height: 30,
+            // ),
 
             //journal
             ListTile(

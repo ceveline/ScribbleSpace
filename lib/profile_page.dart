@@ -10,6 +10,7 @@ import 'journal_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'individual_publication_page.dart';
 import 'login_screen.dart';
+import 'trivia_page.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -29,6 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
   ];
   List<String> publicationCategory1 = [];
   List<String> publicationCategory2 = [];
+  List<String> publicationIds = [];
 
   @override
   void initState() {
@@ -50,11 +52,13 @@ class _ProfilePageState extends State<ProfilePage> {
     // Extract publication data from snapshot and populate lists
     snapshot.docs.forEach((doc) {
       var data = doc.data();
+      var docId = doc.id; // Corrected line
       publicationTitles.add(data['Title']);
       publicationTexts.add(data['Text']);
       publicationImageUrls.add(data['Image']);
       publicationCategory1.add(data['Category-1']);
       publicationCategory2.add(data['Category-2']);
+      publicationIds.add(docId);
     });
 
     // Update UI after fetching data
@@ -183,10 +187,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 Container(
                   width: MediaQuery.of(context).size.width -5,
                   child: ListView.builder(
+
                     shrinkWrap: true,
                     itemCount: publicationTitles.length,
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
+
                       return PublicationWidget(
                         user: user,
                         title: publicationTitles[index],
@@ -194,6 +200,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         imageUrl: publicationImageUrls[index],
                         category1: publicationCategory1[index],
                         category2: publicationCategory2[index],
+                        docId: publicationIds[index],
                       );
                     },
                   ),
@@ -260,6 +267,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
+              onTap: () => Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => TriviaPage())),
             ),
             SizedBox(
               height: 30,
@@ -313,6 +322,7 @@ class PublicationWidget extends StatelessWidget {
   final String imageUrl;
   final String? category1;
   final String? category2;
+  final String docId;
 
   PublicationWidget({
     required this.user,
@@ -321,6 +331,7 @@ class PublicationWidget extends StatelessWidget {
     required this.imageUrl,
     this.category1,
     this.category2,
+    required this.docId
   });
 
   @override
@@ -332,6 +343,7 @@ class PublicationWidget extends StatelessWidget {
           => IndividualPubPage(title: title,
             text: text, image: imageUrl, user: user.email,
             category1: category1, category2: category2,
+            docId: docId,
           )));
     },
     child: Container(
