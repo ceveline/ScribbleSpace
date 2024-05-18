@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:scribblespace/edit_publication.dart';
+import 'package:scribblespace/like_button.dart';
 import 'package:scribblespace/publication_page.dart';
 import 'color_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class IndividualPubPage extends StatefulWidget {
-  final String? doc_id;
+  final String? postId;
+  final List<String>? likes;
   final String? title;
   final String? text;
   final String? user;
@@ -15,13 +16,14 @@ class IndividualPubPage extends StatefulWidget {
   final String? category2;
 
   const IndividualPubPage({
-    this.doc_id,
     this.title,
     this.text,
     this.image,
     this.user,
     this.category1,
     this.category2,
+    this.likes,
+    this.postId
   });
 
   @override
@@ -29,6 +31,56 @@ class IndividualPubPage extends StatefulWidget {
 }
 
 class _IndividualPubPageState extends State<IndividualPubPage> {
+  //get user from fb
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  bool isLiked = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.likes != null && currentUser != null) {
+      isLiked = widget.likes!.contains(currentUser!.email);
+    }
+  }
+
+  // void toggleLike() {
+  //   setState(() {
+  //     isLiked = !isLiked;
+  //   });
+  //
+  //   DocumentReference postRef = FirebaseFirestore.instance.collection('publications').doc(widget.postId);
+  //
+  //   if (isLiked) {
+  //     postRef.update({
+  //       'Likes': FieldValue.arrayUnion([currentUser.email])
+  //     });
+  //   } else {
+  //     postRef.update({
+  //       'Likes': FieldValue.arrayRemove([currentUser.email])
+  //     });
+  //   }
+  // }
+
+  void toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+    });
+
+    // Update likes in Firestore
+      DocumentReference postRef =  FirebaseFirestore.instance.collection('publications').doc(widget.postId);
+    if (isLiked) {
+        postRef.update({
+          'Likes': FieldValue.arrayUnion([currentUser!.email])
+        });
+      } else {
+        postRef.update({
+          'Likes': FieldValue.arrayRemove([currentUser!.email])
+        });
+      }
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +94,6 @@ class _IndividualPubPageState extends State<IndividualPubPage> {
         },
         icon: Icon(Icons.arrow_back_ios, color: Colors.white),
       ),
-      actions: [
-        if (widget.user.toString() == FirebaseAuth.instance.currentUser!.email.toString())
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => EditPublication(pub_id: widget.doc_id,)));
-
-
-            },
-            icon: Icon(Icons.edit, color: Colors.white),
-          ),
-      ],
     ),
     body: SingleChildScrollView(
         child: Column(
@@ -90,6 +131,23 @@ class _IndividualPubPageState extends State<IndividualPubPage> {
                     ),
                   ),
                 ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                //like button
+                LikeButton(isLiked: isLiked, onTap: toggleLike
+                ),
+                const SizedBox(height: 5,),
+
+                //like count
+
+                Text(
+                  widget.likes != null ? widget.likes!.length.toString() : '0',
+                  style: TextStyle(color: Colors.white),
+                ),
+                //count
               ],
             ),
             Container(

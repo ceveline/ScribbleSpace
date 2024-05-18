@@ -109,13 +109,14 @@ class _PublicationPageState extends State<PublicationPage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => IndividualPubPage(
-                                doc_id: pub_id,
                                 title: post['Title'],
                                 text: post['Text'],
                                 image: post['Image'],
                                 user: post['User'],
                                 category1: post['Category-1'],
                                 category2: post['Category-2'],
+                                postId: pub_id.toString(),
+                                likes: List<String>.from(post['Likes']) ?? [],
                               ),
                             ),
                           );
@@ -181,6 +182,19 @@ class _PublicationPageState extends State<PublicationPage> {
                                         fontSize: 12,
                                       ),
                                     ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Icon(Icons.favorite, color: Colors.red, size: 13,),
+                                        Text(
+                                          ' by ${(post['Likes'] as List<dynamic>?)?.length ?? 0}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 ),
                               ),

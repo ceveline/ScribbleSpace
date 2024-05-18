@@ -187,7 +187,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                               "User": FirebaseAuth.instance.currentUser?.email.toString(),
                               "Category-1": category1,
                               "Category-2": category2,
-                              "Image": downloadUrl.toString()
+                              "Image": downloadUrl.toString(),
+                              "Likes": [],
+                              "Timestamp": Timestamp.now()
                             });
 
                             Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen()));
