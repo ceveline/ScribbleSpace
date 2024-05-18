@@ -144,7 +144,7 @@ class _IndividualPubPageState extends State<IndividualPubPage> {
                 //like count
 
                 Text(
-                  widget.likes != null ? widget.likes!.length.toString() : '0',
+                  ' ${widget.likes != null ? widget.likes!.length.toString() : '0'}',
                   style: TextStyle(color: Colors.white),
                 ),
                 //count
