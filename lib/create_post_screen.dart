@@ -27,45 +27,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image != null) {
       _image = File(image.path);}
-    // final picker = ImagePicker();
-    // final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    //
-    // setState(() {
-    //   if (image != null) {
-    //     final File file = File(image.path);
-    //     pickedFile = file.readAsBytesSync();
-    //   }
-    // });
   }
-
-  // Future<String> uploadImage(File imageFile) async {
-  //   String imageName = randomAlphaNumeric(20); // to generate a random name for the image
-  //   Reference ref = FirebaseStorage.instance.ref().child('images').child(imageName);
-  //   UploadTask uploadTask = ref.putFile(imageFile);
-  //   TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
-  //   String downloadURL = await taskSnapshot.ref.getDownloadURL();
-  //   return downloadURL;
-  // }
-  //
-  // Future<File> compressImage(File imageFile) async {
-  //   List<int> imageData = await imageFile.readAsBytes();
-  //
-  //   // Convert List<int> to Uint8List
-  //   Uint8List uint8ImageData = Uint8List.fromList(imageData);
-  //
-  //   // Compress the image data
-  //   List<int> compressedImageData = await FlutterImageCompress.compressWithList(
-  //     uint8ImageData,
-  //     quality: 85, // Adjust the quality as needed (0 to 100)
-  //   );
-
-    // Write compressed data to a new file
-  //   File compressedFile = File(imageFile.path.split('.').first + '_compressed.jpg');
-  //   await compressedFile.writeAsBytes(compressedImageData);
-  //
-  //   return compressedFile;
-  // }
-
 
   //https://www.youtube.com/watch?v=BjowvNSdWYE
   // https://www.youtube.com/watch?v=u52TWx41oU4
@@ -225,7 +187,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                               "User": FirebaseAuth.instance.currentUser?.email.toString(),
                               "Category-1": category1,
                               "Category-2": category2,
-                              "Image": downloadUrl.toString()
+                              "Image": downloadUrl.toString(),
+                              "Likes": [],
+                              "Timestamp": Timestamp.now()
                             });
 
                             Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen()));

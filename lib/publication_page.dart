@@ -102,6 +102,7 @@ class _PublicationPageState extends State<PublicationPage> {
                     itemCount: filteredDocs.length,
                     itemBuilder: (context, index) {
                       var post = filteredDocs[index].data();
+                      var pub_id = filteredDocs[index].id;
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -114,9 +115,12 @@ class _PublicationPageState extends State<PublicationPage> {
                                 user: post['User'],
                                 category1: post['Category-1'],
                                 category2: post['Category-2'],
+                                postId: pub_id.toString(),
+                                likes: List<String>.from(post['Likes']) ?? [],
                               ),
                             ),
                           );
+                          print(pub_id);
                         },
                         child: Container(
                           padding: EdgeInsets.all(15),
@@ -178,6 +182,19 @@ class _PublicationPageState extends State<PublicationPage> {
                                         fontSize: 12,
                                       ),
                                     ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Icon(Icons.favorite, color: Colors.red, size: 13,),
+                                        Text(
+                                          ' by ${(post['Likes'] as List<dynamic>?)?.length ?? 0}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 ),
                               ),

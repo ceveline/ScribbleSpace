@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:scribblespace/like_button.dart';
 import 'package:scribblespace/publication_page.dart';
 import 'color_constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class IndividualPubPage extends StatefulWidget {
+  final String? postId;
+  final List<String>? likes;
   final String? title;
   final String? text;
   final String? user;
@@ -17,6 +22,8 @@ class IndividualPubPage extends StatefulWidget {
     this.user,
     this.category1,
     this.category2,
+    this.likes,
+    this.postId
   });
 
   @override
@@ -24,20 +31,71 @@ class IndividualPubPage extends StatefulWidget {
 }
 
 class _IndividualPubPageState extends State<IndividualPubPage> {
+  //get user from fb
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  bool isLiked = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.likes != null && currentUser != null) {
+      isLiked = widget.likes!.contains(currentUser!.email);
+    }
+  }
+
+  // void toggleLike() {
+  //   setState(() {
+  //     isLiked = !isLiked;
+  //   });
+  //
+  //   DocumentReference postRef = FirebaseFirestore.instance.collection('publications').doc(widget.postId);
+  //
+  //   if (isLiked) {
+  //     postRef.update({
+  //       'Likes': FieldValue.arrayUnion([currentUser.email])
+  //     });
+  //   } else {
+  //     postRef.update({
+  //       'Likes': FieldValue.arrayRemove([currentUser.email])
+  //     });
+  //   }
+  // }
+
+  void toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+    });
+
+    // Update likes in Firestore
+      DocumentReference postRef =  FirebaseFirestore.instance.collection('publications').doc(widget.postId);
+    if (isLiked) {
+        postRef.update({
+          'Likes': FieldValue.arrayUnion([currentUser!.email])
+        });
+      } else {
+        postRef.update({
+          'Likes': FieldValue.arrayRemove([currentUser!.email])
+        });
+      }
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.darkblue,
       appBar: AppBar(
-        backgroundColor: ColorConstants.darkblue,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-        ),
+      backgroundColor: ColorConstants.darkblue,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: Icon(Icons.arrow_back_ios, color: Colors.white),
       ),
-      body: SingleChildScrollView(
+    ),
+    body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -73,6 +131,23 @@ class _IndividualPubPageState extends State<IndividualPubPage> {
                     ),
                   ),
                 ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                //like button
+                LikeButton(isLiked: isLiked, onTap: toggleLike
+                ),
+                const SizedBox(height: 5,),
+
+                //like count
+
+                Text(
+                  ' ${widget.likes != null ? widget.likes!.length.toString() : '0'}',
+                  style: TextStyle(color: Colors.white),
+                ),
+                //count
               ],
             ),
             Container(
