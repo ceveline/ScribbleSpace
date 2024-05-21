@@ -5,22 +5,18 @@ import 'color_constants.dart';
 import 'mainmenu_screen.dart';
 
 class EverythingPublicationPage extends StatefulWidget {
-
-  const EverythingPublicationPage({super.key});
+  const EverythingPublicationPage({Key? key}) : super(key: key);
 
   @override
-  State<EverythingPublicationPage> createState() => _EverythingPublicationPageState();
+  State<EverythingPublicationPage> createState() =>
+      _EverythingPublicationPageState();
 }
 
-class _EverythingPublicationPageState extends State<EverythingPublicationPage> {
+class _EverythingPublicationPageState
+    extends State<EverythingPublicationPage> {
   TextEditingController _searchController = TextEditingController();
 
   String _searchQuery = '';
-
-  List<String> publicationTitles = [];
-  List<String> publicationTexts = [];
-  List<dynamic> publicationIds = [];
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +33,8 @@ class _EverythingPublicationPageState extends State<EverythingPublicationPage> {
         backgroundColor: ColorConstants.darkblue,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenuScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MainMenuScreen()));
           },
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
@@ -46,40 +43,38 @@ class _EverythingPublicationPageState extends State<EverythingPublicationPage> {
       backgroundColor: ColorConstants.purple,
       body: Column(
         children: [
-          SizedBox(height: 15,),
+          SizedBox(height: 15),
           Container(
             width: 350,
             height: 50,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25.0),
-                color: Colors.white
-            ),
+                borderRadius: BorderRadius.circular(25.0), color: Colors.white),
             padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 5),
             child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  prefixIcon: Icon(Icons.search),
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      _searchController.clear();
-                      setState(() {
-                        _searchQuery = '';
-                      });
-                    },
-                  ),
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search',
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                prefixIcon: Icon(Icons.search),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: () {
+                    _searchController.clear();
+                    setState(() {
+                      _searchQuery = '';
+                    });
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    _searchQuery = value.toLowerCase();
-                  });
-                },
               ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value.toLowerCase();
+                });
+              },
+            ),
           ),
-          SizedBox(height: 15,),
+          SizedBox(height: 15),
           Expanded(
             child: StreamBuilder(
               stream: FirebaseFirestore.instance.collection('publications').snapshots(),
@@ -90,8 +85,8 @@ class _EverythingPublicationPageState extends State<EverythingPublicationPage> {
                   if (_searchQuery.isNotEmpty) {
                     docs = docs.where((doc) {
                       var post = doc.data();
-                      return post['Title'].toString().toLowerCase().contains(_searchQuery) ||
-                          post['Text'].toString().toLowerCase().contains(_searchQuery);
+                      return (post?['Title'] ?? '').toString().toLowerCase().contains(_searchQuery) ||
+                          (post?['Text'] ?? '').toString().toLowerCase().contains(_searchQuery);
                     }).toList();
                   }
 
@@ -106,13 +101,16 @@ class _EverythingPublicationPageState extends State<EverythingPublicationPage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => IndividualPubPage(
-                                title: post['Title'],
-                                text: post['Text'],
-                                image: post['Image'],
-                                user: post['User'],
-                                category1: post['Category-1'],
-                                category2: post['Category-2'],
-                                docId: docId,
+
+                                title: post?['Title'] ?? '',
+                                text: post?['Text'] ?? '',
+                                image: post?['Image'] ?? '',
+                                user: post?['User'] ?? '',
+                                category1: post?['Category-1'] ?? '',
+                                category2: post?['Category-2'] ?? '',
+                                likes: List<String>.from(post['Likes']) ?? [],
+                                postId: docs[index].id, // Pass the document ID
+
                               ),
                             ),
                           );
@@ -141,7 +139,7 @@ class _EverythingPublicationPageState extends State<EverythingPublicationPage> {
                                   height: MediaQuery.of(context).size.width / 2.7,
                                   width: MediaQuery.of(context).size.width / 3,
                                   child: Image.network(
-                                    post['Image'],
+                                    post?['Image'] ?? '',
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -152,7 +150,7 @@ class _EverythingPublicationPageState extends State<EverythingPublicationPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      post['Title'].toString(),
+                                      post?['Title'].toString() ?? '',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -177,6 +175,22 @@ class _EverythingPublicationPageState extends State<EverythingPublicationPage> {
                                         fontSize: 12,
                                       ),
                                     ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Icon(Icons.favorite, color: Colors.red, size: 13,),
+                                        Text(
+                                          ' by ${(post['Likes'] as List<dynamic>?)?.length ?? 0}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                    // Like count
+
                                   ],
                                 ),
                               ),
@@ -187,9 +201,7 @@ class _EverythingPublicationPageState extends State<EverythingPublicationPage> {
                     },
                   );
                 } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
+                  return Container();
                 }
 
                 return Center(
