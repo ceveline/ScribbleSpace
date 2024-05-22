@@ -100,6 +100,7 @@ Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: ColorConstants.darkblue,
     appBar: AppBar(
+      backgroundColor: ColorConstants.darkblue,
       leading: IconButton(
         onPressed: () {
           Navigator.pop(context);
