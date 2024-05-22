@@ -285,7 +285,7 @@ class _TriviaPageState extends State<TriviaPage> {
                     ),
                     SizedBox(width: 30),
                     Text(
-                      'Society and Culture',
+                      'Society & Culture',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

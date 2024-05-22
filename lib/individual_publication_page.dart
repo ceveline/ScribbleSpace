@@ -113,20 +113,39 @@ Widget build(BuildContext context) {
           child: IconButton(
             iconSize: 30,
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditPostScreen(
-                    title: "${widget.title}",
-                    text: "${widget.text}",
-                    user: widget.user,
-                    image: "${widget.image}",
-                    category1: "${widget.category1}",
-                    category2: "${widget.category2}",
-                    docId: "${widget.docId}",
+                          title: "${widget.title}",
+                          text: "${widget.text}",
+                          user: widget.user,
+                          image: "${widget.image}",
+                          category1: "${widget.category1}",
+                          category2: "${widget.category2}",
+                          docId: "${widget.docId}",
                   ),
                 ),
-              );
+              ).then((updated) {
+                if (updated == true) {
+                  // Reload or update your data here
+                }
+              });
+
+              // Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => EditPostScreen(
+              //       title: "${widget.title}",
+              //       text: "${widget.text}",
+              //       user: widget.user,
+              //       image: "${widget.image}",
+              //       category1: "${widget.category1}",
+              //       category2: "${widget.category2}",
+              //       docId: "${widget.docId}",
+              //     ),
+              //   ),
+              // );
               print("${widget.category1}");
               print("${widget.category2}");
             },
