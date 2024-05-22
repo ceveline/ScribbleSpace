@@ -107,98 +107,98 @@ Widget build(BuildContext context) {
         },
         icon: Icon(Icons.arrow_back_ios, color: Colors.white),
       ),
-      actions: [
-        Visibility(
-          visible: isCurrentUser, // Show only if the current user matches the publication's user
-          child: IconButton(
-            iconSize: 30,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditPostScreen(
-                          title: "${widget.title}",
-                          text: "${widget.text}",
-                          user: widget.user,
-                          image: "${widget.image}",
-                          category1: "${widget.category1}",
-                          category2: "${widget.category2}",
-                          docId: "${widget.docId}",
-                  ),
-                ),
-              ).then((updated) {
-                if (updated == true) {
-                  // Reload or update your data here
-                }
-              });
-
-              // Navigator.pushReplacement(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => EditPostScreen(
-              //       title: "${widget.title}",
-              //       text: "${widget.text}",
-              //       user: widget.user,
-              //       image: "${widget.image}",
-              //       category1: "${widget.category1}",
-              //       category2: "${widget.category2}",
-              //       docId: "${widget.docId}",
-              //     ),
-              //   ),
-              // );
-              print("${widget.category1}");
-              print("${widget.category2}");
-            },
-            icon: Icon(Icons.edit, color: Colors.white),
-          ),
-        ),
-        Visibility(
-          visible: isCurrentUser, // Show only if the current user matches the publication's user
-          child: IconButton(
-            iconSize: 30,
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  // set up the buttons
-                  Widget cancelButton = TextButton(
-                    child: Text("Cancel"),
-                    onPressed: () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                  );
-                  Widget deleteButton = TextButton(
-                    child: Text("Delete"),
-                    onPressed: () async {
-                      print('${widget.docId}');
-                      DocumentReference<Map<String, dynamic>> docRef =
-                      FirebaseFirestore.instance
-                          .collection('publications')
-                          .doc(widget.docId);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainMenuScreen()),
-                      );
-                      await docRef.delete();
-
-                    },
-                  );
-                  return AlertDialog(
-                    title: Text('Delete Publication'),
-                    content: Text(
-                        'Are you sure you want to delete this publication?'),
-                    actions: [
-                      cancelButton,
-                      deleteButton,
-                    ],
-                  );
-                },
-              );
-            },
-            icon: Icon(Icons.delete, color: Colors.red),
-          ),
-        ),
-      ],
+      // actions: [
+      //   Visibility(
+      //     visible: isCurrentUser, // Show only if the current user matches the publication's user
+      //     child: IconButton(
+      //       iconSize: 30,
+      //       onPressed: () {
+      //         Navigator.push(
+      //           context,
+      //           MaterialPageRoute(
+      //             builder: (context) => EditPostScreen(
+      //                     title: "${widget.title}",
+      //                     text: "${widget.text}",
+      //                     user: widget.user,
+      //                     image: "${widget.image}",
+      //                     category1: "${widget.category1}",
+      //                     category2: "${widget.category2}",
+      //                     docId: "${widget.docId}",
+      //             ),
+      //           ),
+      //         ).then((updated) {
+      //           if (updated == true) {
+      //             // Reload or update your data here
+      //           }
+      //         });
+      //
+      //         // Navigator.pushReplacement(
+      //         //   context,
+      //         //   MaterialPageRoute(
+      //         //     builder: (context) => EditPostScreen(
+      //         //       title: "${widget.title}",
+      //         //       text: "${widget.text}",
+      //         //       user: widget.user,
+      //         //       image: "${widget.image}",
+      //         //       category1: "${widget.category1}",
+      //         //       category2: "${widget.category2}",
+      //         //       docId: "${widget.docId}",
+      //         //     ),
+      //         //   ),
+      //         // );
+      //         print("${widget.category1}");
+      //         print("${widget.category2}");
+      //       },
+      //       icon: Icon(Icons.edit, color: Colors.white),
+      //     ),
+      //   ),
+      //   Visibility(
+      //     visible: isCurrentUser, // Show only if the current user matches the publication's user
+      //     child: IconButton(
+      //       iconSize: 30,
+      //       onPressed: () {
+      //         showDialog(
+      //           context: context,
+      //           builder: (BuildContext context) {
+      //             // set up the buttons
+      //             Widget cancelButton = TextButton(
+      //               child: Text("Cancel"),
+      //               onPressed: () {
+      //                 Navigator.of(context, rootNavigator: true).pop();
+      //               },
+      //             );
+      //             Widget deleteButton = TextButton(
+      //               child: Text("Delete"),
+      //               onPressed: () async {
+      //                 print('${widget.docId}');
+      //                 DocumentReference<Map<String, dynamic>> docRef =
+      //                 FirebaseFirestore.instance
+      //                     .collection('publications')
+      //                     .doc(widget.docId);
+      //                 Navigator.pushReplacement(
+      //                   context,
+      //                   MaterialPageRoute(builder: (context) => MainMenuScreen()),
+      //                 );
+      //                 await docRef.delete();
+      //
+      //               },
+      //             );
+      //             return AlertDialog(
+      //               title: Text('Delete Publication'),
+      //               content: Text(
+      //                   'Are you sure you want to delete this publication?'),
+      //               actions: [
+      //                 cancelButton,
+      //                 deleteButton,
+      //               ],
+      //             );
+      //           },
+      //         );
+      //       },
+      //       icon: Icon(Icons.delete, color: Colors.red),
+      //     ),
+      //   ),
+      // ],
     ),
 
     body: SingleChildScrollView(
